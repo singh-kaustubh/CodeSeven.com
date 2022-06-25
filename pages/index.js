@@ -1,18 +1,24 @@
 import Head from "next/head";
 import Image from "next/image";
-import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
+import Content from "../Components/Content";
+import Blog from "../Components/Blog";
+import Features from "../Components/Features";
+import Testimonials from "../Components/Testimonials";
+import Carousel from "../Components/Carousel";
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>Codeswear.com - Wear your logic</title>
+        <title>CodeSeven.com - Wear your logic</title>
         <meta name="description" content=""></meta>
         <meta name="keywords" content=""></meta>
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
-      <Navbar />
-      <Footer />
+      <Carousel />
+      <Content />
+      <Blog />
+      <Features />
+      <Testimonials />
     </div>
   );
 }
