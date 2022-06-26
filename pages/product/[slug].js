@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { actions } from "../../store/carttSlice";
 export default function Post() {
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
@@ -25,6 +26,10 @@ export default function Post() {
       console.log(err);
     }
     setPin("");
+  };
+  const dispatch = useDispatch();
+  const handleAddtoCart = (product) => {
+    dispatch(actions.addToCart(product));
   };
   return (
     <div>
@@ -183,7 +188,10 @@ export default function Post() {
                 <button className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
                   Buy Now
                 </button>
-                <button className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
+                <button
+                  className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded"
+                  onClick={() => handleAddtoCart(142568)}
+                >
                   Add to Cart
                 </button>
               </div>

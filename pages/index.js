@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import Content from "../Components/Content";
 import Blog from "../Components/Blog";
 import Features from "../Components/Features";
