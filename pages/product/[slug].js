@@ -154,7 +154,7 @@ export default function Post() {
                 pour-over, neutra jean shorts keytar banjo tattooed umami
                 cardigan.
               </p>
-              <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+              <div className="flex flex-wrap mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
                   <span className="mr-3">Color</span>
                   <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
@@ -185,11 +185,11 @@ export default function Post() {
                     </span>
                   </div>
                 </div>
-                <button className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
+                <button className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1  focus:outline-none hover:scale-105 rounded">
                   Buy Now
                 </button>
                 <button
-                  className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded"
+                  className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
                   onClick={() => handleAddtoCart(142568)}
                 >
                   Add to Cart
@@ -197,7 +197,7 @@ export default function Post() {
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-2xl text-gray-900">
-                  $58.00
+                  ₹499.00
                 </span>
                 <div className="flex mx-auto">
                   <input

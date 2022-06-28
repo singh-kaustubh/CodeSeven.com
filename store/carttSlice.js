@@ -40,6 +40,8 @@ const cartSlice = createSlice({
             progress: undefined,
           });
         }
+        state.cartTotalAmount += actions.payload.amount;
+        state.cartTotalQuantity += actions.payload.amount;
       } catch (error) {
         toast.error("Error adding item in the cart", {
           position: "bottom-left",
@@ -52,15 +54,34 @@ const cartSlice = createSlice({
         });
       }
     },
-    deleteFromCart(state, action) {
+    removeFromCart(state, actions) {
+      state.cartItems = state.cartItems.filter(
+        (item) => item.id === actions.payload.id
+      );
+      toast.info("Successfully removed all items of this type from cart", {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+    reduceQuantity(state, actions) {
       const itemIndex = state.cartItems.findIndex(
         (item) => item.id === actions.payload.id
       );
-      if (itemIndex >= 0) {
+      if (state.cartItems[itemIndex].cartQuantity === 1) {
+      } else {
         state.cartItems[itemIndex].cartQuantity -= 1;
       }
-      if (state.cartItems) {
-      }
+    },
+    increaseQuantity(state, action) {
+      const itemIndex = state.cartItems.findIndex(
+        (item) => item.id === actions.payload.id
+      );
+      state.cartItems[itemIndex].cartQuantity += 1;
     },
   },
 });

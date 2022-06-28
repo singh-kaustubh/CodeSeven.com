@@ -163,7 +163,7 @@ export default function Footer() {
                   className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:ring-2 focus:bg-transparent focus:ring-indigo-200 focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
-              <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-50 rounded">
+              <button className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
                 Button
               </button>
               <p className="text-gray-500 text-sm md:ml-6 md:mt-0 mt-2 sm:text-left text-center">
