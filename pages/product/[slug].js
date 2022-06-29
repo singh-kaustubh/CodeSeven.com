@@ -1,12 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
+import { ItemContext } from "../../Context/ItemState";
 import { useDispatch } from "react-redux";
 import { actions } from "../../store/carttSlice";
 export default function Post() {
+  const router = useRouter();
+  const { slug } = router.query;
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
   const [res, setRes] = useState(null);
+  const context = useContext(ItemContext);
+  const [item, setItem] = useState({});
+  const { getItem } = context;
+  const fetchResult = async () => {
+    const res = await getItem(parseInt(slug));
+    setItem(res);
+  };
+  useEffect(() => {
+    fetchResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onChange = (e) => {
     setPin(e.target.value);
   };
@@ -39,14 +54,14 @@ export default function Post() {
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded shadow-lg"
-              src="https://m.media-amazon.com/images/I/613k0gYkdZS._UY879_.jpg"
+              src={item.image}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
                 BRAND NAME
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                The Catcher in the Rye
+                {item.title}
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
@@ -105,7 +120,9 @@ export default function Post() {
                   >
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  <span className="text-gray-600 ml-3">4 Reviews</span>
+                  <span className="text-gray-600 ml-3">
+                    {/* {item.rating.count} */}
+                  </span>
                 </span>
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                   <a className="text-gray-500">
@@ -146,14 +163,7 @@ export default function Post() {
                   </a>
                 </span>
               </div>
-              <p className="leading-relaxed text-justify">
-                Fam locavore kickstarter distillery. Mixtape chillwave tumeric
-                sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo
-                juiceramps cornhole raw denim forage brooklyn. Everyday carry +1
-                seitan poutine tumeric. Gastropub blue bottle austin listicle
-                pour-over, neutra jean shorts keytar banjo tattooed umami
-                cardigan.
-              </p>
+              <p className="leading-relaxed text-justify">{item.description}</p>
               <div className="flex flex-wrap mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
                   <span className="mr-3">Color</span>
@@ -190,14 +200,14 @@ export default function Post() {
                 </button>
                 <button
                   className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
-                  onClick={() => handleAddtoCart(142568)}
+                  onClick={() => handleAddtoCart(item)}
                 >
                   Add to Cart
                 </button>
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-2xl text-gray-900">
-                  ₹499.00
+                  ${item.price}
                 </span>
                 <div className="flex mx-auto">
                   <input
