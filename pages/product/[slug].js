@@ -1,27 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import { ItemContext } from "../../Context/ItemState";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { actions } from "../../store/carttSlice";
-export default function Post() {
+export default function Post({ data }) {
   const router = useRouter();
   const { slug } = router.query;
+  const item = data.filter((item) => item._id === slug)[0];
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
   const [res, setRes] = useState(null);
-  const context = useContext(ItemContext);
-  const [item, setItem] = useState({});
-  const { getItem } = context;
-  const fetchResult = async () => {
-    const res = await getItem(parseInt(slug));
-    setItem(res);
-  };
-  useEffect(() => {
-    fetchResult();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onChange = (e) => {
     setPin(e.target.value);
   };
@@ -54,7 +42,7 @@ export default function Post() {
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded shadow-lg"
-              src={item.image}
+              src={item.img}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -163,7 +151,7 @@ export default function Post() {
                   </a>
                 </span>
               </div>
-              <p className="leading-relaxed text-justify">{item.description}</p>
+              <p className="leading-relaxed text-justify">{item.desc}</p>
               <div className="flex flex-wrap mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex">
                   <span className="mr-3">Color</span>
@@ -200,7 +188,7 @@ export default function Post() {
                 </button>
                 <button
                   className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
-                  onClick={() => handleAddtoCart(item)}
+                  onClick={() => handleAddtoCart({ ...item })}
                 >
                   Add to Cart
                 </button>
@@ -256,4 +244,13 @@ export default function Post() {
       </section>
     </div>
   );
+}
+export async function getServerSideProps() {
+  const response = await fetch("http://localhost:3000/api/getProduct", {
+    method: "GET",
+  });
+  const data = await response.json();
+  return {
+    props: { data },
+  };
 }

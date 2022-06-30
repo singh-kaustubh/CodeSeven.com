@@ -4,6 +4,7 @@ import Blog from "../Components/Blog";
 import Features from "../Components/Features";
 import Testimonials from "../Components/Testimonials";
 import Carousel from "../Components/Carousel";
+
 export default function Home() {
   return (
     <div>

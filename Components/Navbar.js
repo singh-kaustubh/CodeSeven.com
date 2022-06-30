@@ -102,37 +102,26 @@ export default function Navbar() {
                   {cart.cartItems.map((item) => {
                     return (
                       <div
-                        key={item.id}
-                        className="md:flex items-center mt-14 py-8 border-t border-gray-200"
+                        key={item._id}
+                        className="md:flex items-center mt-14 py-2 border-t border-gray-200"
                       >
                         <div className="w-1/4">
                           <img
-                            src="https://cdn.tuk.dev/assets/templates/e-commerce-kit/bestSeller3.png"
+                            src={item.img}
                             className="w-full h-full object-center object-cover"
                           />
                         </div>
                         <div className="md:pl-3 md:w-3/4">
-                          <p className="text-xs leading-3 text-gray-800 md:pt-0 pt-4">
-                            RF293
-                          </p>
                           <div className="flex items-center justify-between w-full pt-1">
                             <p className="text-base font-black leading-none text-gray-800">
-                              North wolf bag
+                              {item.title}
                             </p>
-                            <select className="py-2 px-1 border border-gray-200 mr-6 focus:outline-none">
-                              <option>01</option>
-                              <option>02</option>
-                              <option>03</option>
-                            </select>
+                            <span className="py-2 px-1 border border-gray-200 mr-6 focus:outline-none">
+                             {item.cartQuantity}
+                            </span>
                           </div>
                           <p className="text-xs leading-3 text-gray-600 pt-2">
-                            Height: 10 inches
-                          </p>
-                          <p className="text-xs leading-3 text-gray-600 py-4">
-                            Color: Black
-                          </p>
-                          <p className="w-96 text-xs leading-3 text-gray-600">
-                            Composition: 100% calf leather
+                            {item.desc.slice(0,200)}...
                           </p>
                           <div className="flex items-center justify-between pt-5 pr-6">
                             <div className="flex itemms-center">
@@ -144,7 +133,7 @@ export default function Navbar() {
                               </p>
                             </div>
                             <p className="text-base font-black leading-none text-gray-800">
-                              $9,000
+                              ${item.price}
                             </p>
                           </div>
                         </div>
@@ -166,7 +155,7 @@ export default function Navbar() {
                           Subtotal
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          $9,000
+                          ${cart.cartTotalAmount}
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-5">
@@ -174,7 +163,7 @@ export default function Navbar() {
                           Shipping
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          $30
+                          ${cart.cartTotalAmount?30:0}
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-5">
@@ -182,7 +171,7 @@ export default function Navbar() {
                           Tax
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          $35
+                        ${0.18*cart.cartTotalAmount}
                         </p>
                       </div>
                     </div>

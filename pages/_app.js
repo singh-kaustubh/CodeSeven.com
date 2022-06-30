@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { ItemProvider } from "../Context/ItemState";
 import "react-toastify/dist/ReactToastify.css";
+import ProgressBar from "react-progressbar-on-scroll";
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -21,6 +22,12 @@ function MyApp({ Component, pageProps }) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
+          />
+          <ProgressBar
+            color="#cc0000"
+            gradient={true}
+            colorGradient="yellow"
+            height={5}
           />
           <Navbar />
           <Component {...pageProps} />

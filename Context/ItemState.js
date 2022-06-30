@@ -5,7 +5,7 @@ export const ItemProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const fetchItems = async () => {
     try {
-      const response = await fetch("https://fakestoreapi.com/products", {
+      const response = await fetch("http://localhost:3000/api/getProduct", {
         method: "GET",
       });
       const data = await response.json();
@@ -25,9 +25,7 @@ export const ItemProvider = ({ children }) => {
   const electronicItem = items.filter(
     (item) => item.category === "electronics"
   );
-  const getItem = (id) => {
-    return items.find((item) => item.id === id);
-  };
+
   return (
     <ItemContext.Provider
       value={{
@@ -36,7 +34,6 @@ export const ItemProvider = ({ children }) => {
         womenItem,
         jeweleryItem,
         electronicItem,
-        getItem,
       }}
     >
       {children}

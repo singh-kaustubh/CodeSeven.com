@@ -13,13 +13,17 @@ export default function Women() {
             {womenItem != null ? (
               womenItem.map((item) => {
                 return (
-                  <Link href={`/product/${item.id}`} key={item.id}>
+                  <Link
+                    passHref={true}
+                    href={`/product/${item._id}`}
+                    key={item._id}
+                  >
                     <div className=" lg:w-1/5 cursor-pointer shadow-lg m-5 md:w-1/2 p-4 w-full">
                       <a className="block relative rounded overflow-hidden">
                         <img
                           alt="ecommerce"
                           className="m-auto md:mx-0 h-[30vh] md:h-[36vh] block"
-                          src={item.image}
+                          src={item.img}
                         />
                       </a>
                       <div className="mt-4 text-center md:text-left">
@@ -27,7 +31,7 @@ export default function Women() {
                           {item.title}
                         </h3>
                         <h2 className="text-gray-900 title-font text-lg font-medium">
-                          {item.description.slice(0, 100)}...
+                          {item.desc.slice(0, 100)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
                         <p className="mt-1">S, M, L, XL, XXL</p>
