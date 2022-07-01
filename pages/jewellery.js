@@ -8,8 +8,8 @@ export default function Jewellery() {
   return (
     <div>
       <section className="text-gray-600 body-font">
-        <div className="container px-5 py-10 mx-auto">
-          <div className="flex flex-wrap justify-start -m-4">
+        <div className="container px-5 py-20 mx-auto">
+          <div className="flex flex-wrap justify-center -m-4">
             {jeweleryItem != null ? (
               jeweleryItem.map((item) => {
                 return (
@@ -34,7 +34,7 @@ export default function Jewellery() {
                           {item.desc.slice(0, 100)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        <p className="mt-1">S, M, L, XL, XXL</p>
+                        {item.size && <p className="mt-1">{item.size.arr}</p>}
                       </div>
                     </div>
                   </Link>

@@ -39,8 +39,8 @@ const cartSlice = createSlice({
             progress: undefined,
           });
         }
-        state.cartTotalAmount += actions.payload.amount;
-        state.cartTotalQuantity += actions.payload.amount;
+        state.cartTotalAmount += actions.payload.price;
+        state.cartTotalQuantity += 1;
       } catch (error) {
         toast.error("Error adding item in the cart", {
           position: "bottom-left",

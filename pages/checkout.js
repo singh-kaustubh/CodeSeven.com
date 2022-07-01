@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-
+import { useSelector } from "react-redux/es/exports";
 export default function Checkout() {
+  const cart = useSelector((state) => state.cart);
   return (
-    <div className="2xl:container 2xl:mx-auto py-14 px-4 md:px-6 xl:px-20">
+    <div className="2xl:container 2xl:mx-auto py-24 px-4 md:px-6 xl:px-20">
       <div className="flex flex-col xl:flex-row justify-center  xl:space-y-0 xl:space-x-8">
         <div className="w-full">
           <h2 className="font-semibold text-3xl">Delivery Details</h2>
@@ -134,7 +135,7 @@ export default function Checkout() {
             Order Summary
           </h3>
           <p className="text-base leading-none mt-4 text-gray-800">
-            Paid using credit card/ debit card/ upi/ COD
+            Paid using: Credit Card/Debit Card/UPI/COD
           </p>
           <div className="flex justify-center items-center w-full mt-8  flex-col space-y-4 ">
             <div className="flex md:flex-row justify-start items-start md:items-center  border border-gray-200 w-full">

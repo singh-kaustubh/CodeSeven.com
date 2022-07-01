@@ -4,7 +4,7 @@ import React from "react";
 export default function Testimonials() {
   return (
     <>
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font bg-gray-200">
         <div className="container px-5 py-24 mx-auto">
           <h1 className="text-3xl font-medium title-font text-gray-900 mb-12 text-center">
             Testimonials
@@ -37,7 +37,9 @@ export default function Testimonials() {
                     <span className="title-font font-medium text-gray-900">
                       natalie h
                     </span>
-                    <span className="text-gray-500 text-sm">PREMIUM MEMBER</span>
+                    <span className="text-gray-500 text-sm">
+                      PREMIUM MEMBER
+                    </span>
                   </span>
                 </a>
               </div>

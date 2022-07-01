@@ -1,158 +1,68 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-
+import React, { useContext } from "react";
+import { ItemContext } from "../Context/ItemState";
+import Link from "next/link";
+import Countdown from "react-countdown";
 export default function Content() {
+  const Completionist = () => <span>Deal Expired 😢</span>;
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      return <Completionist />;
+    } else {
+      return (
+        <span>
+          ⏱️ {hours}:{minutes}:{seconds} !
+        </span>
+      );
+    }
+  };
+  const context = useContext(ItemContext);
+  const { featItems } = context;
+  const getTimediff = () => {
+    var d = new Date();
+    var now = Date.now();
+    d.setHours(24, 0, 0, 0);
+    var diff = d - now;
+    return diff;
+  };
   return (
-    <section className="text-gray-50 bg-slate-800 body-font mt-1">
-      <div className="font-bold font-serif text-5xl pt-8 text-center">
+    <section
+      suppressHydrationWarning
+      className="text-gray-50 bg-slate-800 body-font mt-1"
+    >
+      <div className="md:flex md:justify-between font-bold font-serif text-4xl pt-8 mx-5">
         Featured Products
+        <Countdown date={Date.now() + getTimediff()} renderer={renderer} />
       </div>
-      <div className="container px-5 py-24 mx-auto">
+      <div className="container px-5 py-10 mx-auto">
         <div className="flex flex-wrap -m-4">
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/420x260"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                The Catalyzer
-              </h2>
-              <p className="mt-1">$16.00</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/421x261"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                Shooting Stars
-              </h2>
-              <p className="mt-1">$21.15</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/422x262"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                Neptune
-              </h2>
-              <p className="mt-1">$12.00</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/423x263"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                The 400 Blows
-              </h2>
-              <p className="mt-1">$18.40</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/424x264"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                The Catalyzer
-              </h2>
-              <p className="mt-1">$16.00</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/425x265"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                Shooting Stars
-              </h2>
-              <p className="mt-1">$21.15</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/427x267"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                Neptune
-              </h2>
-              <p className="mt-1">$12.00</p>
-            </div>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-            <a className="block relative h-48 rounded overflow-hidden">
-              <img
-                alt="ecommerce"
-                className="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/428x268"
-              />
-            </a>
-            <div className="mt-4">
-              <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                CATEGORY
-              </h3>
-              <h2 className="text-white title-font text-lg font-medium">
-                The 400 Blows
-              </h2>
-              <p className="mt-1">$18.40</p>
-            </div>
-          </div>
+          {featItems.map((item) => {
+            return (
+              <Link href={`/product/${item._id}`} key={item._id}>
+                <div
+                  className="lg:w-1/4 md:w-1/2 p-4 w-full cursor-pointer"
+                  key={item._id}
+                >
+                  <a className="block relative h-48 rounded overflow-hidden">
+                    <img
+                      alt="ecommerce"
+                      className="object-cover object-top w-full h-full block"
+                      src={item.img}
+                    />
+                  </a>
+                  <div className="mt-4">
+                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
+                      {item.category}
+                    </h3>
+                    <h2 className="text-white title-font text-lg font-medium">
+                      {item.title}
+                    </h2>
+                    <p className="mt-1">${item.price}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

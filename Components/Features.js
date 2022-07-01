@@ -3,9 +3,9 @@ import React from "react";
 export default function Features() {
   return (
     <>
-      <section className="text-gray-600 body-font">
-        <div className="container px-5 py-10 mx-auto">
-          <h1 className="sm:text-3xl text-2xl font-medium title-font text-center text-gray-900 mb-20">
+      <section className="text-white body-font bg-gradient-to-r from-gray-700 to-black ...">
+        <div className="container px-5 py-20 mx-auto ">
+          <h1 className="sm:text-3xl text-2xl font-medium title-font text-center text-white mb-20">
             Amazing features and seamless deliveries 😉
           </h1>
           <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
@@ -24,13 +24,13 @@ export default function Features() {
                 </svg>
               </div>
               <div className="flex-grow pl-6">
-                <h2 className="text-gray-900 text-lg title-font font-medium mb-2">
+                <h2 className="text-white text-lg title-font font-medium mb-2">
                   Exciting and pocket friendly offers!
                 </h2>
                 <p className="leading-relaxed text-base">
                   We provide amazing offers & discounts on our products.
                 </p>
-                <a className="mt-3 text-red-900 inline-flex items-center">
+                <a className="mt-3 text-white inline-flex items-center">
                   Learn More
                   <svg
                     fill="none"
@@ -63,13 +63,13 @@ export default function Features() {
                 </svg>
               </div>
               <div className="flex-grow pl-6">
-                <h2 className="text-gray-900 text-lg title-font font-medium mb-2">
+                <h2 className="text-white text-lg title-font font-medium mb-2">
                   Premium Quaility
                 </h2>
                 <p className="leading-relaxed text-base">
                   Over hundreds of apparels with fine tested validation!
                 </p>
-                <a className="mt-3 text-red-900 inline-flex items-center">
+                <a className="mt-3 text-white inline-flex items-center">
                   Learn More
                   <svg
                     fill="none"
@@ -101,13 +101,13 @@ export default function Features() {
                 </svg>
               </div>
               <div className="flex-grow pl-6">
-                <h2 className="text-gray-900 text-lg title-font font-medium mb-2">
+                <h2 className="text-white text-lg title-font font-medium mb-2">
                   Lightning fast deliveries
                 </h2>
                 <p className="leading-relaxed text-base text-justify">
                   Faster and hassle free deliveries!
                 </p>
-                <a className="mt-3 text-red-900 inline-flex items-center">
+                <a className="mt-3 text-white inline-flex items-center">
                   Learn More
                   <svg
                     fill="none"

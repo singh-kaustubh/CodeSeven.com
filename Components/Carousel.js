@@ -78,7 +78,7 @@ export default function Carousel() {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <Image
-              src="/images/home.jpg"
+              src="/images/tshirtcollage.jpg"
               alt="..."
               layout="responsive"
               height={200}
@@ -105,7 +105,7 @@ export default function Carousel() {
           </div>
           <div className="carousel-item">
             <Image
-              src="/images/tshirtcollage.jpg"
+              src="/images/home.jpg"
               alt="..."
               layout="responsive"
               height={200}

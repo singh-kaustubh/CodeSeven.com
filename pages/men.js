@@ -8,7 +8,7 @@ export default function Men() {
   return (
     <div>
       <section className="text-gray-600 body-font">
-        <div className="container px-5 py-10 mx-auto">
+        <div className="container px-5 py-20 mx-auto">
           <div className="flex flex-wrap justify-center -m-4">
             {menItem != null ? (
               menItem.map((item) => {
@@ -34,7 +34,7 @@ export default function Men() {
                           {item.desc.slice(0, 100)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        <p className="mt-1">S, M, L, XL, XXL</p>
+                        {item.size && <p className="mt-1">{item.size.arr}</p>}
                       </div>
                     </div>
                   </Link>

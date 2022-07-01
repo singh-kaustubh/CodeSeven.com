@@ -36,7 +36,7 @@ export default function Post({ data }) {
   };
   return (
     <div>
-      <section className="text-gray-600 body-font overflow-hidden">
+      <section className="text-gray-600 body-font overflow-hidden pt-20">
         <div className="container px-5 py-16 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap ">
             <img

@@ -9,8 +9,8 @@ export default function Electronics() {
   return (
     <div>
       <section className="text-gray-600 body-font">
-        <div className="container px-5 py-10 mx-auto">
-          <div className="flex flex-wrap justify-start -m-4">
+        <div className="container px-5 py-20 mx-auto">
+          <div className="flex flex-wrap justify-center -m-4">
             {electronicItem != null ? (
               electronicItem.map((item) => {
                 return (
@@ -35,7 +35,6 @@ export default function Electronics() {
                           {item.desc.slice(0, 100)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        <p className="mt-1">S, M, L, XL, XXL</p>
                       </div>
                     </div>
                   </Link>

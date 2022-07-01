@@ -14,7 +14,7 @@ export default function Navbar() {
   };
   const cart = useSelector((state) => state.cart);
   return (
-    <div className="">
+    <div className="md:fixed lg:fixed z-10 w-full sm:sticky">
       <header className="text-gray-50 bg-stone-800 body-font mb-1 shadow-lg">
         <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center">
           <Link href={"/"}>
@@ -62,7 +62,7 @@ export default function Navbar() {
       <div>
         {show && (
           <div
-            className="w-[72%] h-full z-10 absolute bg-opacity-90 top-0 right-0 overflow-y-auto overflow-x-hidden "
+            className="w-[72%] h-full z-10 fixed bg-opacity-90 top-0 right-0 overflow-y-auto overflow-x-hidden "
             id="chec-div"
           >
             <div
@@ -117,11 +117,11 @@ export default function Navbar() {
                               {item.title}
                             </p>
                             <span className="py-2 px-1 border border-gray-200 mr-6 focus:outline-none">
-                             {item.cartQuantity}
+                              {item.cartQuantity}
                             </span>
                           </div>
                           <p className="text-xs leading-3 text-gray-600 pt-2">
-                            {item.desc.slice(0,200)}...
+                            {item.desc.slice(0, 200)}...
                           </p>
                           <div className="flex items-center justify-between pt-5 pr-6">
                             <div className="flex itemms-center">
@@ -155,7 +155,7 @@ export default function Navbar() {
                           Subtotal
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          ${cart.cartTotalAmount}
+                          ${(cart.cartTotalAmount).toFixed(2)}
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-5">
@@ -163,7 +163,7 @@ export default function Navbar() {
                           Shipping
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          ${cart.cartTotalAmount?30:0}
+                          ${cart.cartTotalAmount ? 30 : 0}
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-5">
@@ -171,7 +171,7 @@ export default function Navbar() {
                           Tax
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                        ${0.18*cart.cartTotalAmount}
+                          ${(0.18 * cart.cartTotalAmount).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -181,7 +181,12 @@ export default function Navbar() {
                           Total
                         </p>
                         <p className="text-2xl font-bold leading-normal text-right text-gray-800">
-                          $10,240
+                          $
+                          {(
+                            cart.cartTotalAmount +
+                            (cart.cartTotalAmount ? 30 : 0) +
+                            0.18 * cart.cartTotalAmount
+                          ).toFixed(2)}
                         </p>
                       </div>
                       <Link href={"/checkout"}>
