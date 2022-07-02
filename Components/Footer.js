@@ -1,5 +1,5 @@
 import React from "react";
-
+import Image from "next/image";
 export default function Footer() {
   return (
     <div className="bg-footer text-tahiti">
@@ -122,31 +122,11 @@ export default function Footer() {
               </nav>
             </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
-                CATEGORIES
-              </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">First Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">Third Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
+              <Image src="/images/pay.png" alt="..." width={200} height={100} />
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-200">
+        <div className="border-t bg-black border-gray-200">
           <div className="container px-5 py-8 flex flex-wrap mx-auto items-center">
             <div className="flex md:flex-nowrap flex-wrap justify-center items-end md:justify-start">
               <div className="relative sm:w-64 w-40 sm:mr-4 mr-2">
@@ -166,11 +146,6 @@ export default function Footer() {
               <button className="flex ml-auto text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded">
                 Button
               </button>
-              <p className="text-gray-500 text-sm md:ml-6 md:mt-0 mt-2 sm:text-left text-center">
-                Bitters chicharrones fanny pack
-                <br className="lg:block hidden" />
-                waistcoat green juice
-              </p>
             </div>
             <span className="inline-flex lg:ml-auto lg:mt-0 mt-6 w-full justify-center md:justify-start md:w-auto">
               <a className="text-gray-500">
@@ -228,24 +203,6 @@ export default function Footer() {
                   <circle cx="4" cy="4" r="2" stroke="none"></circle>
                 </svg>
               </a>
-            </span>
-          </div>
-        </div>
-        <div className="bg-black">
-          <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-            <p className="text-gray-50 text-sm text-center sm:text-left">
-              © 2020 CodeSeven.com —
-              <a
-                href="https://www.linkedin.com/in/kaustubh-singh-19573a1a6/"
-                className="text-gray-50 ml-1"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                @Kaustubh_Singh
-              </a>
-            </p>
-            <span className="sm:ml-auto sm:mt-0 mt-2 sm:w-auto w-full sm:text-left text-center text-gray-50 text-sm">
-              Enamel pin tousled raclette tacos irony
             </span>
           </div>
         </div>

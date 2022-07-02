@@ -34,6 +34,10 @@ export default function Post({ data }) {
   const handleAddtoCart = (product) => {
     dispatch(actions.addToCart(product));
   };
+  const [size, setSize] = useState(null);
+  const onSelect = (e) => {
+    // setSize(([e.target.name] = [e.target.value]));
+  };
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden pt-20">
@@ -153,21 +157,55 @@ export default function Post({ data }) {
               </div>
               <p className="leading-relaxed text-justify">{item.desc}</p>
               <div className="flex flex-wrap mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-                {item._color && (
-                  <div className="flex">
-                    <span className="mr-3">Color</span>
-                    <button className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"></button>
-                  </div>
-                )}
-                {item.category !== "electronics" && (
+                <div className="flex mt-1">
+                  {item._color &&
+                    Object.keys(item._color).map((val) => {
+                      return (
+                        <div key={item._id}>
+                          {val == "red" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "green" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "yellow" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "blue" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "purple" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "cyan" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-cyan-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                          {val == "black" && (
+                            <button className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+                {item.size.length != 0 && (
                   <div className="flex ml-6 items-center">
                     <span className="mr-3">Size</span>
                     <div className="relative">
-                      <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-red-900 text-base pl-3 pr-10">
-                        <option>SM</option>
-                        <option>M</option>
-                        <option>L</option>
-                        <option>XL</option>
+                      <select
+                        onSelect={onSelect()}
+                        className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-red-900 text-base pl-3 pr-10"
+                      >
+                        {item.size.map((item) => {
+                          return (
+                            <option
+                              onSelect={onSelect()}
+                              id={item}
+                              key={item._id}
+                            >
+                              {item}
+                            </option>
+                          );
+                        })}
                       </select>
                       <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                         <svg
