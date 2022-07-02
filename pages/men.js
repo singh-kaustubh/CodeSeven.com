@@ -28,13 +28,34 @@ export default function Men() {
                       </a>
                       <div className="mt-4 text-center md:text-left">
                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                          {item.title}
+                          {item.title.slice(0, 30)}
                         </h3>
-                        <h2 className="text-gray-900 title-font text-lg font-medium">
-                          {item.desc.slice(0, 100)}...
+                        <h2 className="text-gray-900 title-font text-justify text-lg font-medium">
+                          {item.desc.slice(0, 80)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        {item.size && <p className="mt-1">{item.size.arr}</p>}
+                        <div className="flex align-baseline justify-between mt-2">
+                          {item.size && (
+                            <p className="mt-1 border-2 text-xl">
+                              {item.size.map((item) => {
+                                return `${item}` + " ";
+                              })}
+                            </p>
+                          )}
+                          <div className="flex">
+                            {item._color &&
+                              Object.keys(item._color).map((val) => {
+                                console.log(val);
+                                return (
+                                  <div key={val._id}>
+                                    <button
+                                      className={`mt-1 border-2 border-gray-900 ml-1 bg-${val} rounded-full w-6 h-6 focus:outline-none`}
+                                    ></button>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>

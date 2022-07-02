@@ -28,13 +28,19 @@ export default function Women() {
                       </a>
                       <div className="mt-4 text-center md:text-left">
                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                          {item.title}
+                          {item.title.slice(0,30)}
                         </h3>
-                        <h2 className="text-gray-900 title-font text-lg font-medium">
-                          {item.desc.slice(0, 100)}...
+                        <h2 className="text-gray-900 title-font text-justify text-lg font-medium">
+                          {item.desc.slice(0, 80)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        {item.size && <p className="mt-1">{item.size.arr}</p>}
+                        {item.size && (
+                          <p className="mt-1">
+                            {item.size.map((item) => {
+                              return `${item}` + " ";
+                            })}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </Link>

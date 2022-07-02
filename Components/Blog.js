@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { ItemContext } from "../Context/ItemState";
-import Link from "next/link";
 export default function Blog() {
   const context = useContext(ItemContext);
   const { faishonItems } = context;
-  console.log(faishonItems);
   return (
     <>
       <section className="text-gray-600 body-font bg-gray-200">
@@ -35,7 +33,12 @@ export default function Blog() {
                           {item.summary}
                         </p>
                         <div className="flex items-center flex-wrap ">
-                          <a href={item.detail_url} rel="noreferrer" target="_blank" className="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">
+                          <a
+                            href={item.detail_url}
+                            rel="noreferrer"
+                            target="_blank"
+                            className="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0"
+                          >
                             Learn More
                             <svg
                               className="w-4 h-4 ml-2"

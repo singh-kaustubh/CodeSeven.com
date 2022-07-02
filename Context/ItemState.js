@@ -28,7 +28,7 @@ export const ItemProvider = ({ children }) => {
       options
     );
     const data = await response.json();
-    const temp= ((data.values).events);  
+    const temp = data.values.events;
     setfaishonItems(temp);
   };
   useEffect(() => {
