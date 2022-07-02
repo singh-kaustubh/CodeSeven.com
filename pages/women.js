@@ -28,19 +28,52 @@ export default function Women() {
                       </a>
                       <div className="mt-4 text-center md:text-left">
                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                          {item.title.slice(0,30)}
+                          {item.title.slice(0, 30)}
                         </h3>
                         <h2 className="text-gray-900 title-font text-justify text-lg font-medium">
                           {item.desc.slice(0, 80)}...
                         </h2>
                         <p className="mt-1">$ {item.price}</p>
-                        {item.size && (
-                          <p className="mt-1">
-                            {item.size.map((item) => {
-                              return `${item}` + " ";
-                            })}
-                          </p>
-                        )}
+                        <div className="flex align-baseline justify-between mt-2">
+                          {item.size && (
+                            <p className="mt-1 border-2 text-xl">
+                              {item.size.map((item) => {
+                                return `${item}` + " ";
+                              })}
+                            </p>
+                          )}
+
+                          <div className="flex mt-1">
+                            {item._color &&
+                              Object.keys(item._color).map((val) => {
+                                return (
+                                  <div key={item._id}>
+                                    {val == "red" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "green" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "yellow" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "blue" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "purple" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "cyan" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-cyan-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "black" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>

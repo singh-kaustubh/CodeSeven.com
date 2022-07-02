@@ -33,7 +33,7 @@ export default function Men() {
                         <h2 className="text-gray-900 title-font text-justify text-lg font-medium">
                           {item.desc.slice(0, 80)}...
                         </h2>
-                        <p className="mt-1">$ {item.price}</p>
+                        <p className="-mt-1">$ {item.price}</p>
                         <div className="flex align-baseline justify-between mt-2">
                           {item.size && (
                             <p className="mt-1 border-2 text-xl">
@@ -42,15 +42,33 @@ export default function Men() {
                               })}
                             </p>
                           )}
-                          <div className="flex">
+
+                          <div className="flex mt-1">
                             {item._color &&
                               Object.keys(item._color).map((val) => {
-                                console.log(val);
                                 return (
-                                  <div key={val._id}>
-                                    <button
-                                      className={`mt-1 border-2 border-gray-900 ml-1 bg-${val} rounded-full w-6 h-6 focus:outline-none`}
-                                    ></button>
+                                  <div key={item._id}>
+                                    {val == "red" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "green" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "yellow" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "blue" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "purple" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "cyan" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-cyan-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
+                                    {val == "black" && (
+                                      <button className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>
+                                    )}
                                   </div>
                                 );
                               })}
