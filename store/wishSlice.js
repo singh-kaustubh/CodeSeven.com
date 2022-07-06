@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const initialState = {
   wishlistItems: [],
-  wishlistTotalQuantity: 0,
 };
 const data =
   typeof window !== "undefined" && localStorage.getItem("wishlist")
@@ -16,10 +15,7 @@ const wishSlice = createSlice({
     addToWishlist(state, actions) {
       try {
         const itemIndex = state.wishlistItems.findIndex(
-          (item) =>
-            item._id === actions.payload._id &&
-            item.color === actions.payload.color &&
-            item.size === actions.payload.size
+          (item) => item._id === actions.payload._id
         );
         if (itemIndex >= 0) {
           toast.info("Product is already in the WishList!", {
@@ -46,7 +42,6 @@ const wishSlice = createSlice({
             progress: undefined,
           });
         }
-        state.wishlistTotalQuantity += 1;
         localStorage.setItem("wishlist", JSON.stringify(state));
       } catch (error) {
         toast.error("Error adding item in the wishlist", {
@@ -62,26 +57,33 @@ const wishSlice = createSlice({
       }
     },
     removeFromWishlist(state, actions) {
-      state.wishlistItems = state.wishlistItems.filter(
-        (item) =>
-          !(
-            item._id === actions.payload._id &&
-            item.color === actions.payload.color &&
-            item.size === actions.payload.size
-          )
-      );
-      toast.info("Successfully removed item from wishlist", {
-        theme: "dark",
-        position: "bottom-left",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      state.wishlistTotalQuantity -= 1;
-      localStorage.setItem("wishlist", JSON.stringify(state));
+      try {
+        state.wishlistItems = state.wishlistItems.filter(
+          (item) => !(item._id === actions.payload._id)
+        );
+        toast.info("Successfully removed item from wishlist", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        localStorage.setItem("wishlist", JSON.stringify(state));
+      } catch (error) {
+        toast.error("Error removing item from wishlist", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     },
     clearWishlist() {
       localStorage.removeItem("wishlist");
@@ -99,5 +101,5 @@ const wishSlice = createSlice({
     },
   },
 });
-export const actions = wishSlice.actions;
+export const wishlistActions = wishSlice.actions;
 export default wishSlice;

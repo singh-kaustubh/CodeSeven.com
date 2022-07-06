@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { actions } from "../store/carttSlice";
+import { wishlistActions } from "../store/wishSlice";
 import { useDispatch } from "react-redux";
 export default function Navbar() {
   const [show, setShow] = useState(false);
@@ -33,7 +34,11 @@ export default function Navbar() {
     dispatch(actions.removeFromCart(item));
     return;
   };
+  const handleWishlist = (item) => {
+    dispatch(wishlistActions.addToWishlist(item));
+  };
   const cart = useSelector((state) => state.cart);
+  const wishlist = useSelector((state) => state.wishlist);
   return (
     <div className="md:fixed lg:fixed z-10 w-full">
       <header className="text-gray-50 bg-stone-800 body-font mb-1 shadow-lg">
@@ -199,8 +204,11 @@ export default function Navbar() {
                           </div>
                           <div className="flex items-center justify-between pt-5 pr-6">
                             <div className="flex items-center space-x-2">
-                              <button className="flex text-sm  text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded">
-                                Add to favorites
+                              <button
+                                onClick={() => handleWishlist(item)}
+                                className="flex text-sm  text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded"
+                              >
+                                Add to WishList
                               </button>
                               <button
                                 onClick={() => handleRemove(item)}

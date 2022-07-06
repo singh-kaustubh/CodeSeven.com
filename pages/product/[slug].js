@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { actions } from "../../store/carttSlice";
+import { wishlistActions } from "../../store/wishSlice";
+import ReactStars from "react-rating-stars-component";
 export default function Post({ data }) {
   const router = useRouter();
   const { slug } = router.query;
@@ -34,6 +36,9 @@ export default function Post({ data }) {
   const handleAddtoCart = (product) => {
     dispatch(actions.addToCart(product));
   };
+  const handleWishlist = (item) => {
+    dispatch(wishlistActions.addToWishlist(item));
+  };
   const [size, setSize] = useState(item.size[0]);
   const [color, setColor] = useState(
     item._color ? Object.keys(item._color)[0] : item.color
@@ -55,6 +60,7 @@ export default function Post({ data }) {
   const [colsize, setColsize] = useState(
     item._color ? Object.keys(item._color[color]) : item.size
   );
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden pt-20">
@@ -74,61 +80,15 @@ export default function Post({ data }) {
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-red-900"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-red-900"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-red-900"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-red-900"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-red-900"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
+                  <ReactStars
+                    {...{
+                      size: 25,
+                      activeColor: "#7f1d1d",
+                      isHalf: true,
+                      value: item.rating.rate,
+                      edit: false,
+                    }}
+                  />
                   <span className="text-gray-600 ml-3">
                     {item.rating.count}
                   </span>
@@ -300,9 +260,12 @@ export default function Post({ data }) {
                     Check
                   </button>
                 </div>
-                <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+                <button
+                  onClick={() => handleWishlist(item)}
+                  className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4"
+                >
                   <svg
-                    fill="currentColor"
+                    fill="red"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
