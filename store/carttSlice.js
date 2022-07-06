@@ -25,6 +25,7 @@ const cartSlice = createSlice({
         if (itemIndex >= 0) {
           state.cartItems[itemIndex].cartQuantity += 1;
           toast.info("increased product quantity", {
+            theme: "dark",
             position: "bottom-left",
             autoClose: 2000,
             hideProgressBar: false,
@@ -37,6 +38,7 @@ const cartSlice = createSlice({
           const tempProduct = { ...actions.payload, cartQuantity: 1 };
           state.cartItems.push(tempProduct);
           toast.success("Product added to cart", {
+            theme: "dark",
             position: "bottom-left",
             autoClose: 2000,
             hideProgressBar: false,
@@ -51,6 +53,7 @@ const cartSlice = createSlice({
         localStorage.setItem("cart", JSON.stringify(state));
       } catch (error) {
         toast.error("Error adding item in the cart", {
+          theme: "dark",
           position: "bottom-left",
           autoClose: 2000,
           hideProgressBar: false,
@@ -77,6 +80,7 @@ const cartSlice = createSlice({
           )
       );
       toast.info("Successfully removed item from cart", {
+        theme: "dark",
         position: "bottom-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -87,6 +91,9 @@ const cartSlice = createSlice({
       });
       state.cartTotalAmount -= item.price * item.cartQuantity;
       state.cartTotalQuantity -= item.cartQuantity;
+      if (state.cartTotalQuantity == 0) {
+        state.cartTotalAmount = 0;
+      }
       localStorage.setItem("cart", JSON.stringify(state));
     },
     reduceQuantity(state, actions) {
@@ -96,6 +103,7 @@ const cartSlice = createSlice({
           item.color === actions.payload.color &&
           item.size === actions.payload.size
       );
+      state.cartTotalAmount -= state.cartItems[itemIndex].price;
       if (state.cartItems[itemIndex].cartQuantity === 1) {
         state.cartItems = state.cartItems.filter(
           (item) =>
@@ -105,20 +113,33 @@ const cartSlice = createSlice({
               item.size === actions.payload.size
             )
         );
+        toast.info("Removed item from the cart", {
+          theme: "dark",  
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         state.cartItems[itemIndex].cartQuantity -= 1;
+        toast.info("Reduced the quantity", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
-      toast.info("Reduced the quantity", {
-        position: "bottom-left",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      state.cartTotalAmount -= item.price;
       state.cartTotalQuantity -= 1;
+      if (state.cartTotalQuantity == 0) {
+        state.cartTotalAmount = 0;
+      }
       localStorage.setItem("cart", JSON.stringify(state));
     },
     increaseQuantity(state, actions) {
@@ -130,6 +151,7 @@ const cartSlice = createSlice({
       );
       state.cartItems[itemIndex].cartQuantity += 1;
       toast.info("Increased the quantity", {
+        theme: "dark",
         position: "bottom-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -138,13 +160,14 @@ const cartSlice = createSlice({
         draggable: true,
         progress: undefined,
       });
-      state.cartTotalAmount += item.price;
+      state.cartTotalAmount += state.cartItems[itemIndex].price;
       state.cartTotalQuantity += 1;
       localStorage.setItem("cart", JSON.stringify(state));
     },
     clearCart() {
       localStorage.removeItem("cart");
       toast.success("Your cart has been successfully cleared", {
+        theme: "dark",
         position: "bottom-left",
         autoClose: 2000,
         hideProgressBar: false,

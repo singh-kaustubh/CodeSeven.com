@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { BsBagFill } from "react-icons/bs";
+import { BsBagFill, BsHeart } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { BsCartX } from "react-icons/bs";
-import { CgCloseR } from "react-icons/cg";
+import { CgCloseR, CgProfile } from "react-icons/cg";
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -35,9 +35,9 @@ export default function Navbar() {
   };
   const cart = useSelector((state) => state.cart);
   return (
-    <div className="md:fixed lg:fixed z-10 w-full sm:sticky">
+    <div className="md:fixed lg:fixed z-10 w-full">
       <header className="text-gray-50 bg-stone-800 body-font mb-1 shadow-lg">
-        <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center">
+        <div className="container mx-auto sm:items-start flex flex-wrap p-3 flex-col md:flex-row md:items-center">
           <Link href={"/"}>
             <a className="flex title-font font-medium items-center text-white md:mb-0 cursor-pointer">
               <Image
@@ -72,12 +72,24 @@ export default function Navbar() {
               </a>
             </Link>
           </nav>
-          <button
-            onClick={toggleCart}
-            className="absolute right-0 mx-4 items-center  focus:outline-none hover:bg-gray-700 rounded text-base"
-          >
-            <FiShoppingCart className="text-3xl" />
-          </button>
+          <div className="absolute right-2 items-center space-x-2 md:space-x-4">
+            <button
+              onClick={toggleCart}
+              className="items-center  focus:outline-none hover:bg-gray-700 rounded text-base"
+            >
+              <FiShoppingCart className="text-3xl" />
+            </button>
+            <Link href={"/wishlist"}>
+              <button className="items-center  focus:outline-none hover:bg-gray-700 rounded text-base">
+                <BsHeart className="text-3xl" />
+              </button>
+            </Link>
+            <Link href={"/profile"}>
+              <button className="items-center  focus:outline-none hover:bg-gray-700 rounded text-base">
+                <CgProfile className="text-3xl" />
+              </button>
+            </Link>
+          </div>
         </div>
       </header>
       <div>

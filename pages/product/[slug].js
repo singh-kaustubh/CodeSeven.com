@@ -39,7 +39,7 @@ export default function Post({ data }) {
     item._color ? Object.keys(item._color)[0] : item.color
   );
   const [img, setImg] = useState(item.img);
-  const refreshVariant = (size, color) => {
+  const refreshVariantColor = (size, color) => {
     setColor(color);
     setSize(size);
     setImg(
@@ -48,6 +48,9 @@ export default function Post({ data }) {
         : "https://shirtspace-web-assets.s3.us-west-2.amazonaws.com/ig9uij9e3uikligurral4f3hxc9v"
     );
     setColsize(item._color ? Object.keys(item._color[color]) : item.size);
+  };
+  const refreshVariantSize = (size) => {
+    setSize(size);
   };
   const [colsize, setColsize] = useState(
     item._color ? Object.keys(item._color[color]) : item.size
@@ -178,49 +181,53 @@ export default function Post({ data }) {
                         <div key={index}>
                           {val == "red" && (
                             <button
-                              onClick={() => refreshVariant(size, "red")}
+                              onClick={() => refreshVariantColor(size, "red")}
                               className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "green" && (
                             <button
-                              onClick={() => refreshVariant(size, "green")}
+                              onClick={() => refreshVariantColor(size, "green")}
                               className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "yellow" && (
                             <button
-                              onClick={() => refreshVariant(size, "yellow")}
+                              onClick={() =>
+                                refreshVariantColor(size, "yellow")
+                              }
                               className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "blue" && (
                             <button
-                              onClick={() => refreshVariant(size, "blue")}
+                              onClick={() => refreshVariantColor(size, "blue")}
                               className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "purple" && (
                             <button
-                              onClick={() => refreshVariant(size, "purple")}
+                              onClick={() =>
+                                refreshVariantColor(size, "purple")
+                              }
                               className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "cyan" && (
                             <button
-                              onClick={() => refreshVariant(size, "cyan")}
+                              onClick={() => refreshVariantColor(size, "cyan")}
                               className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "black" && (
                             <button
-                              onClick={() => refreshVariant(size, "black")}
+                              onClick={() => refreshVariantColor(size, "black")}
                               className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "white" && (
                             <button
-                              onClick={() => refreshVariant(size, "white")}
+                              onClick={() => refreshVariantColor(size, "white")}
                               className="border-2 border-gray-900 ml-1 bg-white rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
@@ -235,7 +242,7 @@ export default function Post({ data }) {
                       <select
                         value={size}
                         onChange={(e) => {
-                          refreshVariant(e.target.value, color);
+                          refreshVariantSize(e.target.value);
                         }}
                         className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-red-900 text-base pl-3 pr-10"
                       >

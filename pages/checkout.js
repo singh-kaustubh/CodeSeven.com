@@ -1,13 +1,22 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { actions } from "../store/carttSlice";
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const handleRemove = (item) => {
+    dispatch(actions.removeFromCart(item));
+    return;
+  };
+  const handleSubmit=()=>{
+    
+  }
   return (
     <div className="2xl:container 2xl:mx-auto py-24 px-4 md:px-6 xl:px-20">
       <div className="flex flex-col xl:flex-row justify-center  xl:space-y-0 xl:space-x-8">
-        <div className="w-full">
+        <form className="w-full" onSubmit={handleSubmit}>
           <h2 className="font-semibold text-3xl">Delivery Details</h2>
           <div className=" flex my-2">
             <div className="px-2 w-1/2">
@@ -129,7 +138,7 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-        </div>
+        </form>
         <div className="flex justify-center flex-col items-start w-full lg:w-9/12 xl:w-full ">
           <h3 className="text-3xl xl:text-4xl font-semibold leading-7 xl:leading-9 w-full  md:text-left text-gray-800">
             Order Summary
@@ -154,20 +163,26 @@ export default function Checkout() {
                   <div className="flex justify-start md:justify-between items-start md:items-center  flex-col md:flex-row w-full p-4 md:px-8">
                     <div className="flex flex-col md:flex-shrink-0  justify-start items-start">
                       <h3 className="text-lg md:text-xl  w-full font-semibold leading-6 md:leading-5  text-gray-800">
-                        Premium Quaility Red Dress
+                        {item.title.slice(0, 30)}
                       </h3>
                       <div className="flex flex-row justify-start  space-x-4 md:space-x-6 items-start mt-4 ">
                         <p className="text-sm leading-none text-gray-600">
-                          Size:{" "}
+                          <b>Size: </b>
                           <span className="text-gray-800"> {item.size}</span>
                         </p>
                         <p className="text-sm leading-none text-gray-600">
-                          Quantity:{" "}
+                          <b>Quantity: </b>
                           <span className="text-gray-800">
                             {" "}
                             {item.cartQuantity}
                           </span>
                         </p>
+                        <button
+                          onClick={() => handleRemove(item)}
+                          className="flex text-sm leading-none p-1 -mt-1 text-white bg-red-900 border-0  focus:outline-none hover:scale-105 rounded"
+                        >
+                          Remove
+                        </button>
                       </div>
                     </div>
                     <div className="flex mt-4 md:mt-0 md:justify-end items-center w-full ">
@@ -186,7 +201,7 @@ export default function Checkout() {
                 <div className="flex justify-between  w-full">
                   <p className="text-base leading-4 text-gray-800">Subtotal</p>
                   <p className="text-base leading-4 text-gray-600">
-                    ${cart.cartTotalAmount}
+                    ${cart.cartTotalAmount.toFixed(2)}
                   </p>
                 </div>
                 <div className="flex justify-between  w-full">
@@ -197,12 +212,22 @@ export default function Checkout() {
                     </span>
                   </p>
                   <p className="text-base leading-4 text-gray-600">
-                    {cart.cartTotalAmount > 499 && "-$30.00"}
+                    {cart.cartTotalQuantity
+                      ? cart.cartTotalAmount > 499
+                        ? "-$30.00"
+                        : "$0"
+                      : "$0"}
                   </p>
                 </div>
                 <div className="flex justify-between  w-full">
                   <p className="text-base leading-4 text-gray-800">Shipping</p>
-                  <p className="text-base leading-4 text-gray-600">$8.00</p>
+                  <p className="text-base leading-4 text-gray-600">
+                    {cart.cartTotalQuantity
+                      ? cart.cartTotalAmount > 499
+                        ? "-$30.00"
+                        : "$0"
+                      : "$0"}
+                  </p>
                 </div>
               </div>
               <div className="flex justify-between items-center w-full">
@@ -210,7 +235,12 @@ export default function Checkout() {
                   Total
                 </p>
                 <p className="text-base font-semibold leading-4 text-gray-600">
-                  $36.00
+                  $
+                  {(
+                    cart.cartTotalAmount +
+                    (cart.cartTotalQuantity &&
+                      (cart.cartTotalAmount > 499 ? 0 : 30))
+                  ).toFixed(2)}
                 </p>
               </div>
               <div className="flex w-full justify-center items-center pt-1 md:pt-4  xl:pt-8 space-y-6 md:space-y-8 flex-col">
