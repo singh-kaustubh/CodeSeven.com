@@ -24,7 +24,7 @@ export const ItemProvider = ({ children }) => {
       },
     };
     const response = await fetch(
-      "https://chicmi.p.rapidapi.com/calendar_in_city/?city=london&days=7&max_results=10",
+      "https://chicmi.p.rapidapi.com/calendar_in_city/?city=london&days=7&max_results=9",
       options
     );
     const data = await response.json();

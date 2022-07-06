@@ -19,18 +19,18 @@ export default function Content() {
   const context = useContext(ItemContext);
   const { featItems } = context;
   const getTimediff = () => {
-    var d = new Date();
-    var now = Date.now();
+    const d = new Date();
+    const now = Date.now();
     d.setHours(24, 0, 0, 0);
-    var diff = d - now;
+    const diff = d - now;
     return diff;
   };
   return (
-    <section
-      suppressHydrationWarning
-      className="text-gray-50 bg-slate-800 body-font mt-1"
-    >
-      <div className="md:flex md:justify-between font-bold font-serif text-4xl pt-8 mx-5">
+    <section className="text-gray-50 bg-slate-800 body-font mt-1">
+      <div
+        suppressHydrationWarning={true}
+        className="md:flex md:justify-between font-bold font-serif text-4xl pt-8 mx-5"
+      >
         Featured Products
         <Countdown date={Date.now() + getTimediff()} renderer={renderer} />
       </div>

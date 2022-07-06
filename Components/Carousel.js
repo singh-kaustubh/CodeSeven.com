@@ -3,7 +3,7 @@
 import Head from "next/head";
 import React from "react";
 import Image from "next/image";
-export default function Carousel() {
+export default function Document() {
   return (
     <>
       <Head>

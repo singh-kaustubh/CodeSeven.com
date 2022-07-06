@@ -10,8 +10,9 @@ const ProductSchema = new mongoose.Schema(
     category: { type: String, required: true },
     img: { type: String, required: true },
     size: { type: Array },
-    color: { type: Array },
+    _color: { type: Object },
     rating: { type: Object },
+    var_img: { type: Object },
   },
   { timestamps: true }
 );

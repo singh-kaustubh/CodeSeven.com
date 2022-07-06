@@ -42,12 +42,11 @@ export default function Men() {
                               })}
                             </p>
                           )}
-
                           <div className="flex mt-1">
                             {item._color &&
-                              Object.keys(item._color).map((val) => {
+                              Object.keys(item._color).map((val, index) => {
                                 return (
-                                  <div key={item._id}>
+                                  <div key={index}>
                                     {val == "red" && (
                                       <button className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"></button>
                                     )}

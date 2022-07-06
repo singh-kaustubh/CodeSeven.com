@@ -3,14 +3,35 @@
 import React, { useState } from "react";
 import { BsBagFill } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
+import { IoAddCircleOutline } from "react-icons/io5";
+import { AiOutlineMinusCircle } from "react-icons/ai";
+import { BsCartX } from "react-icons/bs";
 import { CgCloseR } from "react-icons/cg";
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
+import { actions } from "../store/carttSlice";
+import { useDispatch } from "react-redux";
 export default function Navbar() {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
   const toggleCart = () => {
     setShow(!show);
+  };
+  const clearCart = () => {
+    dispatch(actions.clearCart());
+  };
+  const handleAdd = (item) => {
+    dispatch(actions.increaseQuantity(item));
+    return;
+  };
+  const handleMinus = (item) => {
+    dispatch(actions.reduceQuantity(item));
+    return;
+  };
+  const handleRemove = (item) => {
+    dispatch(actions.removeFromCart(item));
+    return;
   };
   const cart = useSelector((state) => state.cart);
   return (
@@ -62,12 +83,12 @@ export default function Navbar() {
       <div>
         {show && (
           <div
+            onBlur={toggleCart}
             className="w-[72%] h-full z-10 fixed bg-opacity-90 top-0 right-0 overflow-y-auto overflow-x-hidden "
             id="chec-div"
           >
             <div
-              onBlur={toggleCart}
-              className="w-full   right-0 h-full  transform translate-x-0 transition ease-in-out duration-700"
+              className="w-full right-0 h-full  transform translate-x-0 transition ease-in-out duration-700"
               id="checkout"
             >
               <div className="flex md:flex-row flex-col justify-end" id="cart">
@@ -77,7 +98,7 @@ export default function Navbar() {
                 >
                   <div
                     className="flex items-center text-gray-500 hover:text-gray-600 cursor-pointer"
-                    onClick={() => setShow(!show)}
+                    onClick={toggleCart}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +124,7 @@ export default function Navbar() {
                     return (
                       <div
                         key={item._id}
-                        className="md:flex items-center mt-14 py-2 border-t border-gray-200"
+                        className="md:flex items-center mt-14 ml-4 py-2 border-t border-gray-200"
                       >
                         <div className="w-1/4">
                           <img
@@ -113,24 +134,68 @@ export default function Navbar() {
                         </div>
                         <div className="md:pl-3 md:w-3/4">
                           <div className="flex items-center justify-between w-full pt-1">
-                            <p className="text-base font-black leading-none text-gray-800">
-                              {item.title}
+                            <p className="text-sm font-black leading-none text-gray-800">
+                              <a
+                                passHref={true}
+                                className="cursor-pointer"
+                                href={`/product/${item._id}`}
+                              >
+                                {item.title}
+                              </a>
                             </p>
-                            <span className="py-2 px-1 border border-gray-200 mr-6 focus:outline-none">
-                              {item.cartQuantity}
-                            </span>
+
+                            <div className="flex">
+                              <button
+                                onClick={() => handleMinus(item)}
+                                className="cursor-pointer "
+                              >
+                                <AiOutlineMinusCircle className="text-xl  mt-1 mx-1" />
+                              </button>
+                              <span className="px-1 border border-gray-900 focus:outline-none">
+                                {item.cartQuantity}
+                              </span>
+                              <button
+                                onClick={() => handleAdd(item)}
+                                className="cursor-pointer "
+                              >
+                                <IoAddCircleOutline className="text-xl mt-1 mx-1" />
+                              </button>
+                            </div>
                           </div>
                           <p className="text-xs leading-3 text-gray-600 pt-2">
-                            {item.desc.slice(0, 200)}...
+                            {item.desc.slice(0, 100)}...
                           </p>
+                          <div>
+                            <ul>
+                              <li>
+                                {item.size && (
+                                  <div>
+                                    <b>Size:</b>
+                                    {item.size}
+                                  </div>
+                                )}
+                              </li>
+                              <li>
+                                {item.color && (
+                                  <div>
+                                    <b>Color:</b>
+                                    {item.color}
+                                  </div>
+                                )}
+                              </li>
+                            </ul>
+                          </div>
                           <div className="flex items-center justify-between pt-5 pr-6">
-                            <div className="flex itemms-center">
-                              <p className="text-xs leading-3 underline text-gray-800 cursor-pointer">
+                            <div className="flex items-center space-x-2">
+                              <button className="flex text-sm  text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded">
                                 Add to favorites
-                              </p>
-                              <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer">
+                              </button>
+                              <button
+                                onClick={() => handleRemove(item)}
+                                className="flex text-sm text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded"
+                              >
                                 Remove
-                              </p>
+                              </button>
                             </div>
                             <p className="text-base font-black leading-none text-gray-800">
                               ${item.price}
@@ -155,7 +220,7 @@ export default function Navbar() {
                           Subtotal
                         </p>
                         <p className="text-base leading-none text-gray-800">
-                          ${(cart.cartTotalAmount).toFixed(2)}
+                          ${cart.cartTotalAmount.toFixed(2)}
                         </p>
                       </div>
                       <div className="flex items-center justify-between pt-5">
@@ -176,7 +241,7 @@ export default function Navbar() {
                       </div>
                     </div>
                     <div>
-                      <div className="flex items-center pb-6 justify-between lg:pt-5 pt-20">
+                      <div className="flex items-center pb-1 justify-between lg:pt-5 pt-20">
                         <p className="text-2xl leading-normal text-gray-800">
                           Total
                         </p>
@@ -189,15 +254,27 @@ export default function Navbar() {
                           ).toFixed(2)}
                         </p>
                       </div>
-                      <Link href={"/checkout"}>
+                      <div className="text-justify my-2">
+                        Free shipping on orders worth $499 or more at Checkout
+                      </div>
+                      <div className="flex space-x-4 sm:space-x-1 lg:space-x-1 md:space-x-1">
+                        <Link className="flex" href={"/checkout"}>
+                          <button
+                            onClick={toggleCart}
+                            className=" flex rounded-lg justify-center text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
+                          >
+                            <BsBagFill className="mr-2" />
+                            Checkout
+                          </button>
+                        </Link>
                         <button
-                          onClick={toggleCart}
-                          className=" flex justify-center text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
+                          onClick={clearCart}
+                          className=" flex justify-center rounded-lg text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
                         >
-                          <BsBagFill className="mr-2" />
-                          Checkout
+                          <BsCartX className="mr-2 text-white" />
+                          Clear
                         </button>
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

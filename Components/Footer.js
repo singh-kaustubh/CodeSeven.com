@@ -1,13 +1,35 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/dist/client/link";
 export default function Footer() {
   return (
     <div className="bg-footer text-tahiti">
       <footer className="text-gray-50 body-font">
-        <div className="container px-5 py-24 mx-auto">
+        <div className="container px-5 py-14 mx-auto">
           <div className="flex flex-wrap md:text-left text-center -mb-10 -mx-4">
+            <div className="flex items-center lg:w-1/6 md:w-1/2 w-full px-4">
+              <div className="title-font font-medium text-gray-50 tracking-widest text-lg mb-3">
+                <Link href={"/"}>
+                  <a className="flex title-font font-medium items-center text-white md:mb-0 cursor-pointer">
+                    <Image
+                      className=""
+                      src="/images/logo.png"
+                      width={30}
+                      height={30}
+                      alt="..."
+                    />
+                    CodeSeven.com
+                  </a>
+                </Link>
+                <div className="text-[11px] mx-auto text-gray-500">
+                  Wear your &lt;Code/&gt;
+                  <br className="" />
+                  Premium coding tshirts, electronics and apparals
+                </div>
+              </div>
+            </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
+              <h2 className="title-font font-medium text-gray-50 tracking-widest text-lg mb-3">
                 CATEGORIES
               </h2>
               <nav className="list-none mb-10">
@@ -30,99 +52,103 @@ export default function Footer() {
               </nav>
             </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
-                CATEGORIES
+              <h2 className="title-font font-medium text-gray-50 tracking-widest text-lg mb-3">
+                SHOP
               </h2>
               <nav className="list-none mb-10">
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">First Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Second Link
+                  <a href={"/men"} className="text-gray-50 hover:text-gray-800">
+                    Men&apos;s Clothing
                   </a>
                 </li>
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">Third Link</a>
+                  <a
+                    href={"/women"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Women&apos;s Clothing
+                  </a>
                 </li>
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Fourth Link
+                  <a
+                    href={"/electronics"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Electronics
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={"/jewellery"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Jewelery
                   </a>
                 </li>
               </nav>
             </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
-                CATEGORIES
+              <h2 className="title-font font-medium text-gray-50 tracking-widest text-lg mb-3">
+                CUSTOMER CARE
               </h2>
               <nav className="list-none mb-10">
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">First Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Second Link
+                  <a
+                    href={"/about"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    About Us
                   </a>
                 </li>
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">Third Link</a>
+                  <a
+                    href={"/return"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Return Policy
+                  </a>
                 </li>
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Fourth Link
+                  <a
+                    href={"/contact"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Contact Details
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/images/sizechart.png"
+                    target={"_blank"}
+                    className="text-gray-50 hover:text-gray-800"
+                  >
+                    Size Chart
                   </a>
                 </li>
               </nav>
             </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
-                CATEGORIES
+              <h2 className="title-font font-medium text-gray-50 tracking-widest text-lg mb-3">
+                Policy and Careers
               </h2>
               <nav className="list-none mb-10">
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">First Link</a>
-                </li>
-                <li>
                   <a className="text-gray-50 hover:text-gray-800">
-                    Second Link
+                    Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a className="text-gray-50 hover:text-gray-800">Third Link</a>
+                  <a className="text-gray-50 hover:text-gray-800">Careers</a>
                 </li>
                 <li>
                   <a className="text-gray-50 hover:text-gray-800">
-                    Fourth Link
+                    Terms and Conditions
                   </a>
                 </li>
               </nav>
             </div>
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-50 tracking-widest text-sm mb-3">
-                CATEGORIES
-              </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">First Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Second Link
-                  </a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">Third Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-50 hover:text-gray-800">
-                    Fourth Link
-                  </a>
-                </li>
-              </nav>
-            </div>
-            <div className="lg:w-1/6 md:w-1/2 w-full px-4">
-              <Image src="/images/pay.png" alt="..." width={200} height={100} />
+              <Image src="/images/pay.png" alt="..." width={300} height={200} />
             </div>
           </div>
         </div>

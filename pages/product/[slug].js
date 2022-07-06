@@ -10,7 +10,7 @@ export default function Post({ data }) {
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
   const [res, setRes] = useState(null);
-  const onChange = (e) => {
+  const onChangePin = (e) => {
     setPin(e.target.value);
   };
   const onClick = async () => {
@@ -34,10 +34,24 @@ export default function Post({ data }) {
   const handleAddtoCart = (product) => {
     dispatch(actions.addToCart(product));
   };
-  const [size, setSize] = useState(null);
-  const onSelect = (e) => {
-    // setSize(([e.target.name] = [e.target.value]));
+  const [size, setSize] = useState(item.size[0]);
+  const [color, setColor] = useState(
+    item._color ? Object.keys(item._color)[0] : item.color
+  );
+  const [img, setImg] = useState(item.img);
+  const refreshVariant = (size, color) => {
+    setColor(color);
+    setSize(size);
+    setImg(
+      item.var_img
+        ? item.var_img[color]
+        : "https://shirtspace-web-assets.s3.us-west-2.amazonaws.com/ig9uij9e3uikligurral4f3hxc9v"
+    );
+    setColsize(item._color ? Object.keys(item._color[color]) : item.size);
   };
+  const [colsize, setColsize] = useState(
+    item._color ? Object.keys(item._color[color]) : item.size
+  );
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden pt-20">
@@ -46,7 +60,7 @@ export default function Post({ data }) {
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-top rounded shadow-lg"
-              src={item.img}
+              src={img}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -113,7 +127,7 @@ export default function Post({ data }) {
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
                   <span className="text-gray-600 ml-3">
-                    {/* {item.rating.count} */}
+                    {item.rating.count}
                   </span>
                 </span>
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
@@ -159,29 +173,56 @@ export default function Post({ data }) {
               <div className="flex flex-wrap mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex mt-1">
                   {item._color &&
-                    Object.keys(item._color).map((val) => {
+                    Object.keys(item._color).map((val, index) => {
                       return (
-                        <div key={item._id}>
+                        <div key={index}>
                           {val == "red" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "red")}
+                              className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "green" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "green")}
+                              className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "yellow" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "yellow")}
+                              className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "blue" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "blue")}
+                              className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "purple" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "purple")}
+                              className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "cyan" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-cyan-900 rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "cyan")}
+                              className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                           {val == "black" && (
-                            <button className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>
+                            <button
+                              onClick={() => refreshVariant(size, "black")}
+                              className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
+                          )}
+                          {val == "white" && (
+                            <button
+                              onClick={() => refreshVariant(size, "white")}
+                              className="border-2 border-gray-900 ml-1 bg-white rounded-full w-6 h-6 focus:outline-none"
+                            ></button>
                           )}
                         </div>
                       );
@@ -192,17 +233,16 @@ export default function Post({ data }) {
                     <span className="mr-3">Size</span>
                     <div className="relative">
                       <select
-                        onSelect={onSelect()}
+                        value={size}
+                        onChange={(e) => {
+                          refreshVariant(e.target.value, color);
+                        }}
                         className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-red-900 text-base pl-3 pr-10"
                       >
-                        {item.size.map((item) => {
+                        {colsize.map((val, index) => {
                           return (
-                            <option
-                              onSelect={onSelect()}
-                              id={item}
-                              key={item._id}
-                            >
-                              {item}
+                            <option value={val} key={index}>
+                              {val}
                             </option>
                           );
                         })}
@@ -228,7 +268,7 @@ export default function Post({ data }) {
                 </button>
                 <button
                   className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
-                  onClick={() => handleAddtoCart({ ...item })}
+                  onClick={() => handleAddtoCart({ ...item, size, color, img })}
                 >
                   Add to Cart
                 </button>
@@ -244,7 +284,7 @@ export default function Post({ data }) {
                     placeholder=" Enter your pincode"
                     id="pin"
                     name="pin"
-                    onChange={onChange}
+                    onChange={onChangePin}
                   />
                   <button
                     className="flex ml-2 text-white bg-red-900 border-0 py-2 px-6 focus:outline-none hover:scale-105 rounded-md"
