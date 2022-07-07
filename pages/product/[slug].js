@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../store/carttSlice";
 import { wishlistActions } from "../../store/wishSlice";
 import ReactStars from "react-rating-stars-component";
@@ -12,8 +13,19 @@ export default function Post({ data }) {
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
   const [res, setRes] = useState(null);
+  const wishlist = useSelector((state) => state.wishlist);
   const onChangePin = (e) => {
     setPin(e.target.value);
+  };
+  const getwishStatus = (item) => {
+    if (wishlist.wishlistItems.find((val) => val._id == item._id)) {
+      return "#7f1d1d";
+    } else {
+      return "currentColor";
+    }
+  };
+  const handleBuynow = (item) => {
+    dispatch(actions.buyNow(item));
   };
   const onClick = async () => {
     try {
@@ -230,9 +242,14 @@ export default function Post({ data }) {
                     </div>
                   </div>
                 )}
-                <button className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1  focus:outline-none hover:scale-105 rounded">
-                  Buy Now
-                </button>
+                <Link href={"/checkout"}>
+                  <button
+                    onClick={() => handleBuynow({ ...item, size, color, img })}
+                    className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1  focus:outline-none hover:scale-105 rounded"
+                  >
+                    Buy Now
+                  </button>
+                </Link>
                 <button
                   className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
                   onClick={() => handleAddtoCart({ ...item, size, color, img })}
@@ -265,7 +282,7 @@ export default function Post({ data }) {
                   className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4"
                 >
                   <svg
-                    fill="red"
+                    fill={getwishStatus(item)}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"

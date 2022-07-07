@@ -153,7 +153,6 @@ export default function Navbar() {
                           <div className="flex items-center justify-between w-full pt-1">
                             <p className="text-sm font-black leading-none text-gray-800">
                               <a
-                                passHref={true}
                                 className="cursor-pointer"
                                 href={`/product/${item._id}`}
                               >

@@ -114,7 +114,7 @@ const cartSlice = createSlice({
             )
         );
         toast.info("Removed item from the cart", {
-          theme: "dark",  
+          theme: "dark",
           position: "bottom-left",
           autoClose: 2000,
           hideProgressBar: false,
@@ -177,6 +177,40 @@ const cartSlice = createSlice({
         progress: undefined,
       });
       return initialState;
+    },
+    buyNow(state, actions) {
+      try {
+        localStorage.removeItem("cart");
+        state.cartItems = [];
+        state.cartTotalAmount = 0;
+        state.cartTotalQuantity = 0;
+        const tempProduct = { ...actions.payload, cartQuantity: 1 };
+        state.cartItems.push(tempProduct);
+        toast.success("Product added to cart", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        state.cartTotalAmount += actions.payload.price;
+        state.cartTotalQuantity += 1;
+        localStorage.setItem("cart", JSON.stringify(state));
+      } catch (error) {
+        toast.error("Error adding product added to cart", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     },
   },
 });

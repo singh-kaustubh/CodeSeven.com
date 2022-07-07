@@ -10,9 +10,7 @@ export default function Checkout() {
     dispatch(actions.removeFromCart(item));
     return;
   };
-  const handleSubmit=()=>{
-    
-  }
+  const handleSubmit = () => {};
   return (
     <div className="2xl:container 2xl:mx-auto py-24 px-4 md:px-6 xl:px-20">
       <div className="flex flex-col xl:flex-row justify-center  xl:space-y-0 xl:space-x-8">
@@ -154,11 +152,7 @@ export default function Checkout() {
                   className="flex md:flex-row justify-start items-start md:items-center  border border-gray-200 w-full"
                 >
                   <div className="w-40 md:w-32">
-                    <img
-                      className="md:block"
-                      src={item.img}
-                      alt="girl-in-red-dress"
-                    />
+                    <img className="md:block" src={item.img} alt="..." />
                   </div>
                   <div className="flex justify-start md:justify-between items-start md:items-center  flex-col md:flex-row w-full p-4 md:px-8">
                     <div className="flex flex-col md:flex-shrink-0  justify-start items-start">
@@ -187,7 +181,7 @@ export default function Checkout() {
                     </div>
                     <div className="flex mt-4 md:mt-0 md:justify-end items-center w-full ">
                       <p className="text-base lg:text-2xl font-semibold leading-5 lg:leading-6 text-gray-800">
-                        ${item.price}
+                        ${(item.price * item.cartQuantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -222,11 +216,7 @@ export default function Checkout() {
                 <div className="flex justify-between  w-full">
                   <p className="text-base leading-4 text-gray-800">Shipping</p>
                   <p className="text-base leading-4 text-gray-600">
-                    {cart.cartTotalQuantity
-                      ? cart.cartTotalAmount > 499
-                        ? "-$30.00"
-                        : "$0"
-                      : "$0"}
+                    {cart.cartTotalQuantity ? "$30" : "$0"}
                   </p>
                 </div>
               </div>
