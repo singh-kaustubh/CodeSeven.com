@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-export default function login() {
+import React, { useState } from "react";
+import Link from "next/link";
+export default function Signup() {
   let sectionStyle = {
     height: "100vh",
     backgroundImage: `url(${"/images/signup4.jpg"})`,
@@ -15,6 +16,43 @@ export default function login() {
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
   };
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [number, setNumber] = useState();
+  const [password, setPassword] = useState();
+  const [cpassword, setCpassword] = useState();
+  const onChangehandle = (e) => {
+    if (e.target.name == "name") {
+      setName(e.target.value);
+    } else if ((e.target.name = "email")) {
+      setEmail(e.target.value);
+    } else if ((e.target.name = "password")) {
+      setNumber(e.target.value);
+    } else if ((e.target.name = "number")) {
+      setPassword(e.target.value);
+    } else if ((e.target.name = "cpassword")) {
+      setCpassword(e.target.value);
+    }
+  };
+  const onSubmithandle = async (e) => {
+    e.preventDefault();
+    const data = { name, email, password, number, cpassword };
+    try {
+      const response = await fetch("http://localhost:3000/api/signup", {
+        method: `POST`,
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
+      if(res.success){
+        
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <section className="h-full gradient-form " style={mybackStyle}>
@@ -22,7 +60,7 @@ export default function login() {
           <div className="flex justify-center items-center flex-wrap h-full text-gray-800">
             <div className="xl:w-10/12">
               <div className="block bg-white shadow-2xl rounded-lg">
-                <div className="lg:flex lg:flex-wrap g-0">
+                <div className="lg:flex lg:flex-wrap">
                   <div className="lg:w-6/12 px-4 md:px-0">
                     <div className="md:p-12 md:mx-6">
                       <div className="text-center">
@@ -35,14 +73,29 @@ export default function login() {
                           CodeSeven.com
                         </h4>
                       </div>
-                      <form>
+                      <form onSubmit={onSubmithandle}>
                         <p className="mb-4">Sign up to get exciting offers!</p>
-
+                        <div className="mb-4">
+                          <input
+                            type="text"
+                            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            id="name"
+                            name="name"
+                            htmlFor="name"
+                            value={name}
+                            onChange={onChangehandle}
+                            placeholder="Name"
+                          />
+                        </div>
                         <div className="mb-4">
                           <input
                             type="email"
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            id="exampleFormControlInput1"
+                            id="email"
+                            name="email"
+                            htmlFor="email"
+                            value={email}
+                            onChange={onChangehandle}
                             placeholder="Email"
                           />
                         </div>
@@ -50,7 +103,11 @@ export default function login() {
                           <input
                             type="number"
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            id="exampleFormControlInput1"
+                            id="number"
+                            name="number"
+                            htmlFor="number"
+                            value={number}
+                            onChange={onChangehandle}
                             placeholder="Mobile Number"
                           />
                         </div>
@@ -58,7 +115,11 @@ export default function login() {
                           <input
                             type="password"
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            id="exampleFormControlInput1"
+                            id="password"
+                            name="password"
+                            htmlFor="password"
+                            value={password}
+                            onChange={onChangehandle}
                             placeholder="Password"
                           />
                         </div>
@@ -66,11 +127,15 @@ export default function login() {
                           <input
                             type="password"
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            id="exampleFormControlInput1"
+                            id="cpassword"
+                            name="cpassword"
+                            htmlFor="cpassword"
+                            value={cpassword}
+                            onChange={onChangehandle}
                             placeholder="Confirm Password"
                           />
                         </div>
-                        <div className="text-center pt-1 mb-12 pb-1">
+                        <div className="text-center pt-1 mb-7 ">
                           <button
                             className="inline-block px-6 py-2.5 bg-red-900 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:scale-105 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
                             type="button"
@@ -80,16 +145,18 @@ export default function login() {
                             Sign Up
                           </button>
                         </div>
-                        <div className="flex items-center justify-between pb-6">
+                        <div className="flex items-center lg:mb-0 mb-2 justify-between">
                           <p className="mb-0 mr-2">Already have an account?</p>
-                          <button
-                            type="button"
-                            className="flex text-lg px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
-                            data-mdb-ripple="true"
-                            data-mdb-ripple-color="light"
-                          >
-                            Log In
-                          </button>
+                          <Link href={"/login"}>
+                            <button
+                              type="button"
+                              className="flex text-lg px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
+                              data-mdb-ripple="true"
+                              data-mdb-ripple-color="light"
+                            >
+                              Log In
+                            </button>
+                          </Link>
                         </div>
                       </form>
                     </div>
@@ -99,7 +166,7 @@ export default function login() {
                     style={sectionStyle}
                   >
                     <div className="text-white px-4 py-6 md:p-12 md:mx-6">
-                      <p className="text-3xl font-semibold mb-6">
+                      <p className="text-3xl font-semibold text-justify mb-6">
                         &quot;Fashion is the part of the daily air and it
                         changes all the time, with all events. You can even see
                         the approaching of a revolution in clothes. You can see

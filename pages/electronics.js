@@ -8,7 +8,7 @@ export default function Electronics() {
   const { electronicItem } = context;
   return (
     <div>
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font min-h-[50vh]">
         <div className="container px-5 py-20 mx-auto">
           <div className="flex flex-wrap justify-center -m-4">
             {electronicItem != null ? (
@@ -23,7 +23,7 @@ export default function Electronics() {
                       <a className="block relative rounded overflow-hidden">
                         <img
                           alt="ecommerce"
-                          className="m-auto md:mx-0 h-[30vh] md:h-[36vh] block"
+                          className="m-auto md:mx-auto h-[30vh] md:h-[36vh] block"
                           src={item.img}
                         />
                       </a>

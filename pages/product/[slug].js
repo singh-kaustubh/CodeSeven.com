@@ -2,6 +2,8 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../store/carttSlice";
 import { wishlistActions } from "../../store/wishSlice";
@@ -65,9 +67,29 @@ export default function Post({ data }) {
         : "https://shirtspace-web-assets.s3.us-west-2.amazonaws.com/ig9uij9e3uikligurral4f3hxc9v"
     );
     setColsize(item._color ? Object.keys(item._color[color]) : item.size);
+    toast.info("Changed product color!", {
+      theme: "dark",
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
   const refreshVariantSize = (size) => {
     setSize(size);
+    toast.info("Changed product size!", {
+      theme: "dark",
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
   const [colsize, setColsize] = useState(
     item._color ? Object.keys(item._color[color]) : item.size

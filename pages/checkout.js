@@ -144,6 +144,11 @@ export default function Checkout() {
           <p className="text-base leading-none mt-4 text-gray-800">
             Paid using: Credit Card/Debit Card/UPI/COD
           </p>
+          {!cart.cartItems.length && (
+            <p className="text-center text-3xl leading-none mt-10 text-gray-800">
+              Your cart is empty! Browse items now 😎
+            </p>
+          )}
           <div className="flex justify-center items-center w-full mt-8  flex-col space-y-4 ">
             {cart.cartItems.map((item, index) => {
               return (

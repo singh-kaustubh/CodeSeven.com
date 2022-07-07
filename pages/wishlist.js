@@ -12,12 +12,14 @@ export default function Wishlist() {
   };
   return (
     <>
-      <section className="text-gray-600 body-font overflow-hidden">
+      <section className="text-gray-600 body-font overflow-hidden min-h-[50vh]">
         <div className="container px-10 py-24 mx-auto">
           <div className=" divide-y-2 divide-gray-100">
             <div className="flex justify-center items-center w-full text-xl flex-col space-y-4 ">
               <div className="font-bold font-serif text-3xl">
-                Your wishlist!
+                {wishlist.wishlistItems.length
+                  ? "Your wishlist!"
+                  : "Your wishlist is empty 😢"}
               </div>
               {wishlist.wishlistItems.map((item, index) => {
                 return (
@@ -64,7 +66,7 @@ export default function Wishlist() {
                           </Link>
                         </div>
                         <p className="text-xl  bg-gree leading-none -mr-3 text-gray-800">
-                          <b>Currnet Price</b>: ${item.price.toFixed(2)}
+                          <b>Current Price</b>: ${item.price.toFixed(2)}
                         </p>
                       </div>
                     </div>
