@@ -15,9 +15,9 @@ const handler = async (req, res) => {
         phone: req.body.phone,
       });
       await u.save();
-      console.log(req.body);
       res.status(200).json({ success: "Done!" });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Internal server errorr" });
     }
   } else {

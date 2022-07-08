@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Signup() {
   let sectionStyle = {
     height: "100vh",
@@ -19,24 +21,30 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState();
-  const [password, setPassword] = useState();
-  const [cpassword, setCpassword] = useState();
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
   const onChangehandle = (e) => {
     if (e.target.name == "name") {
       setName(e.target.value);
-    } else if ((e.target.name = "email")) {
+    } else if (e.target.name === "email") {
       setEmail(e.target.value);
-    } else if ((e.target.name = "password")) {
+    } else if (e.target.name === "number") {
       setNumber(e.target.value);
-    } else if ((e.target.name = "number")) {
+    } else if (e.target.name === "password") {
       setPassword(e.target.value);
-    } else if ((e.target.name = "cpassword")) {
+    } else if (e.target.name === "cpassword") {
       setCpassword(e.target.value);
     }
   };
   const onSubmithandle = async (e) => {
     e.preventDefault();
-    const data = { name, email, password, number, cpassword };
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+      phone: parseInt(number),
+      cpassword: cpassword,
+    };
     try {
       const response = await fetch("http://localhost:3000/api/signup", {
         method: `POST`,
@@ -46,11 +54,46 @@ export default function Signup() {
         body: JSON.stringify(data),
       });
       const res = await response.json();
-      if(res.success){
-        
+      if (res.success) {
+        toast.success("Successfully registered the user", {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else if (res.error) {
+        toast.error(res.error, {
+          theme: "dark",
+          position: "bottom-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
+      setName("");
+      setEmail("");
+      setPassword("");
+      setNumber("");
+      setCpassword("");
     } catch (error) {
       console.log(error);
+      toast.error("Internal server error!", {
+        theme: "dark",
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
   return (
@@ -81,10 +124,10 @@ export default function Signup() {
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="name"
                             name="name"
-                            htmlFor="name"
                             value={name}
                             onChange={onChangehandle}
                             placeholder="Name"
+                            required
                           />
                         </div>
                         <div className="mb-4">
@@ -93,10 +136,10 @@ export default function Signup() {
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="email"
                             name="email"
-                            htmlFor="email"
                             value={email}
                             onChange={onChangehandle}
                             placeholder="Email"
+                            required
                           />
                         </div>
                         <div className="mb-4">
@@ -105,10 +148,10 @@ export default function Signup() {
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="number"
                             name="number"
-                            htmlFor="number"
                             value={number}
                             onChange={onChangehandle}
                             placeholder="Mobile Number"
+                            required
                           />
                         </div>
                         <div className="mb-4">
@@ -117,10 +160,10 @@ export default function Signup() {
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="password"
                             name="password"
-                            htmlFor="password"
                             value={password}
                             onChange={onChangehandle}
                             placeholder="Password"
+                            required
                           />
                         </div>
                         <div className="mb-4">
@@ -129,36 +172,36 @@ export default function Signup() {
                             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             id="cpassword"
                             name="cpassword"
-                            htmlFor="cpassword"
                             value={cpassword}
                             onChange={onChangehandle}
                             placeholder="Confirm Password"
+                            required
                           />
                         </div>
                         <div className="text-center pt-1 mb-7 ">
                           <button
+                            type="submit"
                             className="inline-block px-6 py-2.5 bg-red-900 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:scale-105 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                            type="button"
                             data-mdb-ripple="true"
                             data-mdb-ripple-color="light"
                           >
                             Sign Up
                           </button>
                         </div>
-                        <div className="flex items-center lg:mb-0 mb-2 justify-between">
-                          <p className="mb-0 mr-2">Already have an account?</p>
-                          <Link href={"/login"}>
-                            <button
-                              type="button"
-                              className="flex text-lg px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
-                              data-mdb-ripple="true"
-                              data-mdb-ripple-color="light"
-                            >
-                              Log In
-                            </button>
-                          </Link>
-                        </div>
                       </form>
+                      <div className="flex items-center lg:mb-0 mb-2 justify-between">
+                        <p className="mb-0 mr-2">Already have an account?</p>
+                        <Link href={"/login"}>
+                          <button
+                            type="button"
+                            className="flex text-lg px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
+                            data-mdb-ripple="true"
+                            data-mdb-ripple-color="light"
+                          >
+                            Log In
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                   <div
@@ -171,8 +214,7 @@ export default function Signup() {
                         changes all the time, with all events. You can even see
                         the approaching of a revolution in clothes. You can see
                         and feel everything in clothes.&quot;
-                        <br />
-                        -Diana Vreeland
+                        <br />- Diana Vreeland
                       </p>
                     </div>
                   </div>

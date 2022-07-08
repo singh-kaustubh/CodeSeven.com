@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
       max: 50,
     },
     password: { type: String, min: 6, required: true },
-    phone: { type: Number, required: true },
+    phone: { type: Number, required: true, unique: true },
   },
   { timestamps: true }
 );
