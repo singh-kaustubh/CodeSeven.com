@@ -1,6 +1,8 @@
 import User from "../../models/User";
 import connectDb from "../../middlewear/mongoose";
+import CryptoJS from "crypto-js";
 const handler = async (req, res) => {
+  const secKey = process.env.SECRET_KEY_CRYPTO.toString();
   if (req.method === `POST`) {
     try {
       if (req.body.password !== req.body.cpassword) {
@@ -11,7 +13,7 @@ const handler = async (req, res) => {
       let u = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: CryptoJS.AES.encrypt(req.body.password, secKey).toString(),
         phone: req.body.phone,
       });
       await u.save();

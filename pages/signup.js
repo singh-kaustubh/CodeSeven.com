@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
+
 export default function Signup() {
   let sectionStyle = {
     height: "100vh",
@@ -18,6 +20,7 @@ export default function Signup() {
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
   };
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState();
@@ -82,6 +85,9 @@ export default function Signup() {
       setPassword("");
       setNumber("");
       setCpassword("");
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch (error) {
       console.log(error);
       toast.error("Internal server error!", {
