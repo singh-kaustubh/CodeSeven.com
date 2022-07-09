@@ -58,7 +58,8 @@ export default function Signup() {
       });
       const res = await response.json();
       if (res.success) {
-        toast.success("Successfully registered the user", {
+        localStorage.setItem("auth-token", res.token);
+        toast.success(`Successfully registered ${res.name}`, {
           theme: "dark",
           position: "bottom-left",
           autoClose: 2000,

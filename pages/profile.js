@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Profile() {
-  return (
-    <div className="container px-5 py-20 mx-auto">profile</div>
-  )
+  return <div className="py-24 min-h-[50vh]">profile</div>;
 }

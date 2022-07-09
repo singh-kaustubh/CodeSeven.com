@@ -2,18 +2,27 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import { BsBagFill, BsHeart } from "react-icons/bs";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ImProfile } from "react-icons/im";
 import { FiShoppingCart } from "react-icons/fi";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { AiOutlineMinusCircle } from "react-icons/ai";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { AiOutlineMinusCircle, AiOutlineLogin } from "react-icons/ai";
 import { BsCartX } from "react-icons/bs";
 import { CgCloseR, CgProfile } from "react-icons/cg";
+import { GiJigsawBox } from "react-icons/gi";
+import { GrPower } from "react-icons/gr";
+import { RiCoupon2Line } from "react-icons/ri";
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { actions } from "../store/carttSlice";
 import { wishlistActions } from "../store/wishSlice";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 export default function Navbar() {
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const toggleCart = () => {
@@ -37,8 +46,28 @@ export default function Navbar() {
   const handleWishlist = (item) => {
     dispatch(wishlistActions.addToWishlist(item));
   };
+  const data =
+    typeof window !== "undefined" && localStorage.getItem("auth-token");
   const cart = useSelector((state) => state.cart);
-  const wishlist = useSelector((state) => state.wishlist);
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    toast.success(`Successfully logged out!`, {
+      theme: "dark",
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 1200);
+    setTimeout(() => {
+      router.push("http://localhost:3000");
+    }, 1000);
+  };
   return (
     <div className="md:fixed lg:fixed z-10 w-full">
       <header className="text-gray-50 bg-stone-800 body-font mb-1 shadow-lg">
@@ -80,7 +109,7 @@ export default function Navbar() {
           <div className="absolute right-2 items-center space-x-2 md:space-x-4">
             <button
               onClick={toggleCart}
-              className="items-center  focus:outline-none hover:bg-gray-700 rounded text-base"
+              className="items-center focus:outline-none hover:bg-gray-700 rounded text-base"
             >
               <FiShoppingCart className="text-3xl" />
             </button>
@@ -89,11 +118,68 @@ export default function Navbar() {
                 <BsHeart className="text-3xl" />
               </button>
             </Link>
-            <Link href={"/profile"}>
-              <button className="items-center  focus:outline-none hover:bg-gray-700 rounded text-base">
+            {data ? (
+              <button
+                className="items-center relative dropdown:block focus:outline-none hover:bg-gray-700 rounded text-base"
+                aria-haspopup="true"
+              >
                 <CgProfile className="text-3xl" />
+                <ul
+                  className="absolute hidden right-0 text-left text-gray-900 w-auto p-3 mt-3 space-y-2 text-lg bg-white border border-gray-100 rounded-lg shadow-lg"
+                  aria-label="submenu"
+                >
+                  <li>
+                    <Link href="/profile">
+                      <a className="border-b-2 border-b-gray-400 flex items-center">
+                        <ImProfile className="text-lg mx-0.5" />
+                        Profile
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/order">
+                      <a className="border-b-2 border-b-gray-400 flex items-center">
+                        <GiJigsawBox className="text-lg mx-0.5" />
+                        Orders
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/coupons">
+                      <a className="border-b-2 border-b-gray-400 flex items-center">
+                        <RiCoupon2Line className="text-lg mx-0.5" />
+                        Coupons
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/notifications">
+                      <a className="border-b-2 border-b-gray-400 flex items-center">
+                        <IoMdNotificationsOutline className="text-lg mx-0.5" />
+                        Notifications
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <div className="border-b-2 border-b-gray-400 flex items-center">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center"
+                      >
+                        <GrPower className="text-lg mx-0.5" />
+                        Logout
+                      </button>
+                    </div>
+                  </li>
+                </ul>
               </button>
-            </Link>
+            ) : (
+              <button className="items-center focus:outline-none hover:bg-gray-700 rounded text-base">
+                <Link href={"/login"}>
+                  <AiOutlineLogin className="text-3xl" />
+                </Link>
+              </button>
+            )}
           </div>
         </div>
       </header>

@@ -26,6 +26,7 @@ export default function Login() {
       });
       const response = await res.json();
       if (response.success) {
+        localStorage.setItem("auth-token", response.token);
         toast.success(`Successfully signed in ${response.name} `, {
           theme: "dark",
           position: "bottom-left",
@@ -38,7 +39,7 @@ export default function Login() {
         });
         setTimeout(() => {
           router.push("http://localhost:3000");
-        }, 2000);
+        }, 1000);
       } else {
         toast.error(`${response.error}`, {
           theme: "dark",
