@@ -3,16 +3,75 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../store/carttSlice";
+import Head from "next/head";
+import Script from "next/script";
 export default function Checkout() {
-  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const handleRemove = (item) => {
     dispatch(actions.removeFromCart(item));
     return;
   };
+  const cart = useSelector((state) => state.cart);
+  const items = cart.cartItems;
+  const total = cart.cartTotalAmount;
+  const OID = Math.floor(Date.now() * Math.random());
+  const data = { items, total, OID, email: "email" };
+  const PAYTM_HOST = process.env.NEXT_PUBLIC_PAYTM_HOST;
+  const PAYTM_MID = process.env.NEXT_PUBLIC_PAYTM_MID;
+  const initiatePayment = async () => {
+    const response = await fetch("http://localhost:3000/api/pretransaction", {
+      method: `POST`,
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const txnToken = await response.json();
+    var config = {
+      root: "",
+      flow: "DEFAULT",
+      data: {
+        orderId: OID,
+        token: txnToken,
+        tokenType: "TXN_TOKEN",
+        amount: total,
+      },
+      handler: {
+        notifyMerchant: function (eventName, data) {
+          console.log("notifyMerchant handler function called");
+          console.log("eventName => ", eventName);
+          console.log("data => ", data);
+        },
+      },
+    };
+    {
+      typeof window !== "undefined" &&
+        window.Paytm.CheckoutJS.init(config)
+          .then(function onSuccess() {
+            window.Paytm.CheckoutJS.invoke();
+          })
+          .catch(function onError(error) {
+            console.log("error => ", error);
+          });
+    }
+  };
   const handleSubmit = () => {};
   return (
     <div className="2xl:container 2xl:mx-auto py-24 px-4 md:px-6 xl:px-20">
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"
+        />
+      </Head>
+      <Script
+        id="payment"
+        type="application/javascript"
+        crossorigin="anonymous"
+        src={`${PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${PAYTM_MID}.js`}
+      >
+        {" "}
+      </Script>
       <div className="flex flex-col xl:flex-row justify-center  xl:space-y-0 xl:space-x-8">
         <form className="w-full" onSubmit={handleSubmit}>
           <h2 className="font-semibold text-3xl">Delivery Details</h2>
@@ -239,7 +298,10 @@ export default function Checkout() {
                 </p>
               </div>
               <div className="flex w-full justify-center items-center pt-1 md:pt-4  xl:pt-8 space-y-6 md:space-y-8 flex-col">
-                <button className="py-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800  w-full text-base font-medium leading-4 text-white bg-gray-800 hover:bg-black">
+                <button
+                  onClick={initiatePayment}
+                  className="py-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800  w-full text-base font-medium leading-4 text-white bg-gray-800 hover:bg-black"
+                >
                   Confirm and proceed to payment
                 </button>
               </div>

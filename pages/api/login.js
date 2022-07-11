@@ -15,14 +15,12 @@ const handler = async (req, res) => {
           let token = jwt.sign({ name: user.name, email: user.email }, jwtKey, {
             expiresIn: "365d",
           });
-          return res
-            .status(200)
-            .json({
-              success: true,
-              name: user.name,
-              email: user.email,
-              token: token,
-            });
+          return res.status(200).json({
+            success: true,
+            name: user.name,
+            email: user.email,
+            token: token,
+          });
         }
       }
       return res
