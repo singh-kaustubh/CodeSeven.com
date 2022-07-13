@@ -1,21 +1,35 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../store/carttSlice";
 import Head from "next/head";
 import Script from "next/script";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Checkout() {
   const dispatch = useDispatch();
   const handleRemove = (item) => {
     dispatch(actions.removeFromCart(item));
     return;
   };
+  const [orderAddress, setOrderAddress] = useState({
+    name: "",
+    email: "",
+    address: "",
+    phone: "",
+    city: "Bulandshahr",
+    state: "Uttar Pradesh",
+    pincode: "",
+  });
+  const handleChange = (e) => {
+    setOrderAddress({ ...orderAddress, [e.target.name]: e.target.value });
+  };
   const cart = useSelector((state) => state.cart);
   const items = cart.cartItems;
   const total = cart.cartTotalAmount;
   const OID = Math.floor(Date.now() * Math.random());
-  const data = { items, total, OID, email: "email" };
+  const data = { items, total, OID, email: orderAddress.email, address: orderAddress };
   const PAYTM_HOST = process.env.NEXT_PUBLIC_PAYTM_HOST;
   const PAYTM_MID = process.env.NEXT_PUBLIC_PAYTM_MID;
   const initiatePayment = async () => {
@@ -26,7 +40,8 @@ export default function Checkout() {
       },
       body: JSON.stringify(data),
     });
-    const txnToken = await response.json();
+    const txnbody = await response.json();
+    const txnToken = txnbody.txnToken;
     var config = {
       root: "",
       flow: "DEFAULT",
@@ -55,7 +70,19 @@ export default function Checkout() {
           });
     }
   };
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    toast.success(`Successfully updated the address`, {
+      theme: "dark",
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
   return (
     <div className="2xl:container 2xl:mx-auto py-24 px-4 md:px-6 xl:px-20">
       <Head>
@@ -88,6 +115,9 @@ export default function Checkout() {
                   type="text"
                   id="name"
                   name="name"
+                  required
+                  value={orderAddress.name}
+                  onChange={handleChange}
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -103,6 +133,9 @@ export default function Checkout() {
                 <input
                   type="email"
                   id="email"
+                  required
+                  value={orderAddress.email}
+                  onChange={handleChange}
                   name="email"
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
@@ -119,14 +152,16 @@ export default function Checkout() {
               </label>
               <textarea
                 id="address"
+                required
                 name="address"
+                value={orderAddress.address}
+                onChange={handleChange}
                 className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 cols="30"
                 rows="2"
               ></textarea>
             </div>
           </div>
-
           <div className=" flex my-2">
             <div className="px-2 w-1/2">
               <div className="mb-4">
@@ -137,8 +172,11 @@ export default function Checkout() {
                   Phone
                 </label>
                 <input
-                  type="phone"
+                  type="number"
+                  required
                   id="phone"
+                  onChange={handleChange}
+                  value={orderAddress.phone}
                   name="phone"
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
@@ -147,15 +185,18 @@ export default function Checkout() {
             <div className="px-2 w-1/2">
               <div className="mb-4">
                 <label
-                  htmlFor="city"
+                  htmlFor="pincode"
                   className="leading-7 text-sm text-gray-600"
                 >
-                  City
+                  Pincode
                 </label>
                 <input
-                  type="text"
-                  id="city"
-                  name="city"
+                  type="number"
+                  required
+                  id="pincode"
+                  value={orderAddress.pincode}
+                  onChange={handleChange}
+                  name="pincode"
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white   focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -171,9 +212,12 @@ export default function Checkout() {
                   State
                 </label>
                 <input
-                  type="phone"
+                  type="text"
                   id="state"
+                  required
                   name="state"
+                  value={orderAddress.state}
+                  readOnly={true}
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -181,19 +225,30 @@ export default function Checkout() {
             <div className="px-2 w-1/2">
               <div className="mb-4">
                 <label
-                  htmlFor="pincode"
+                  htmlFor="city"
                   className="leading-7 text-sm text-gray-600"
                 >
-                  Pincode
+                  City
                 </label>
                 <input
-                  type="number"
-                  id="pincode"
-                  name="pincode"
+                  type="text"
+                  id="City"
+                  required
+                  value={orderAddress.city}
+                  readOnly={true}
+                  name="city"
                   className="w-full border-2 border-gray-900 mx-auto rounded-md bg-white focus:border-red-500 focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
             </div>
+          </div>
+          <div className="flex w-full justify-center items-center pb-[1.1rem] flex-col">
+            <button
+              type="submit"
+              className="py-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800  w-full text-base font-medium leading-4 text-white bg-gray-800 hover:bg-black"
+            >
+              Confirm your name and Delivery address
+            </button>
           </div>
         </form>
         <div className="flex justify-center flex-col items-start w-full lg:w-9/12 xl:w-full ">

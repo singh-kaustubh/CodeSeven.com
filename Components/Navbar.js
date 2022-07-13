@@ -61,11 +61,8 @@ export default function Navbar() {
       draggable: true,
       progress: undefined,
     });
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 1200);
     setTimeout(() => {
-      router.push("http://localhost:3000");
+      router.push("/");
     }, 1000);
   };
   return (

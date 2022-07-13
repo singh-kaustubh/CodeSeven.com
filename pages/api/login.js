@@ -3,8 +3,8 @@ import connectDb from "../../middlewear/mongoose";
 import CryptoJS from "crypto-js";
 import jwt from "jsonwebtoken";
 const handler = async (req, res) => {
-  const secKey = process.env.SECRET_KEY_CRYPTO.toString();
-  const jwtKey = process.env.JWT_KEY.toString();
+  const secKey = process.env.SECRET_KEY_CRYPTO;
+  const jwtKey = process.env.JWT_KEY;
   if (req.method === `POST`) {
     try {
       let user = await User.findOne({ email: req.body.email });

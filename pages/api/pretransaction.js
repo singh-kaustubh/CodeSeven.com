@@ -1,10 +1,18 @@
 import { request } from "https";
 import connectDb from "../../middlewear/mongoose";
 import PaytmChecksum from "paytmchecksum";
+import Order from "../../models/Order";
 const handler = async (req, res) => {
-  const MID = process.env.PAYTM_MID;
+  const MID = process.env.NEXT_PUBLIC_PAYTM_MID;
   const MKEY = process.env.PAYTM_MKEY;
   if (req.method == `POST`) {
+    const o = new Order({
+      orderId: req.body.OID,
+      email: "kaustubhsingh@gmail.com",
+      address: req.body.address,
+      amount: req.body.total,
+    });
+    await o.save();
     var paytmParams = {};
     paytmParams.body = {
       requestType: "Payment",
@@ -47,9 +55,7 @@ const handler = async (req, res) => {
               response += chunk;
             });
             post_res.on("end", function () {
-              let ress = JSON.parse(response).body;
-              ress.success = true;
-              resolve(ress);
+              resolve(JSON.parse(response).body);
             });
           });
           post_req.write(post_data);
@@ -59,8 +65,8 @@ const handler = async (req, res) => {
         }
       });
     };
-    let myr = await requestAsync();
-    res.status(200).json(myr);
+    let myResponse = await requestAsync();
+    res.status(200).json(myResponse);
   }
 };
 export default connectDb(handler);
