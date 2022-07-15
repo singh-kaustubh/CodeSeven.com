@@ -165,7 +165,7 @@ const cartSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state));
     },
     clearCart() {
-      localStorage.removeItem("cart");
+      typeof window !== "undefined" && localStorage.removeItem("cart");
       toast.success("Your cart has been successfully cleared", {
         theme: "dark",
         position: "bottom-left",
@@ -211,6 +211,10 @@ const cartSlice = createSlice({
           progress: undefined,
         });
       }
+    },
+    postcheckoutClearcart() {
+      typeof window !== "undefined" && localStorage.removeItem("cart");
+      return initialState;
     },
   },
 });

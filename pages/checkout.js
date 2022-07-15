@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../store/carttSlice";
 import Head from "next/head";
@@ -18,18 +18,109 @@ export default function Checkout() {
     email: "",
     address: "",
     phone: "",
-    city: "Bulandshahr",
-    state: "Uttar Pradesh",
+    city: "Please enter the pincode",
+    state: "Please enter the pincode",
     pincode: "",
   });
+  const fetchCitystate = async (pincode) => {
+    try {
+      const res = await fetch(
+        `https://api.postalpincode.in/pincode/${pincode}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await res.json();
+      const response = data[0];
+      const state = response.PostOffice
+        ? response.PostOffice[0].State
+        : "invalid pincode";
+      const city = response.PostOffice
+        ? response.PostOffice[0].District
+        : "invalid pincode";
+      setOrderAddress({
+        ...orderAddress,
+        state: state,
+        city: city,
+        pincode: pincode,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const isDisabled = () => {
+    if (
+      orderAddress.email.length < 3 ||
+      orderAddress.address.length < 3 ||
+      orderAddress.city.length < 3 ||
+      orderAddress.name.length < 3 ||
+      orderAddress.phone.length < 3 ||
+      orderAddress.pincode.length < 3 ||
+      orderAddress.state.length < 3
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const [email, setEmail] = useState();
   const handleChange = (e) => {
     setOrderAddress({ ...orderAddress, [e.target.name]: e.target.value });
+    if (e.target.name == "pincode" && e.target.value.length == 6) {
+      fetchCitystate(e.target.value);
+    } else if (e.target.name == "pincode" && e.target.value.length != 6) {
+      setOrderAddress({
+        ...orderAddress,
+        state: "Please enter a valid pincode",
+        city: "Please enter a valid pincode",
+        pincode: e.target.value,
+      });
+    }
   };
+  const fetchUser = async (token) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/fetchUser", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      });
+      const response = await res.json();
+      setEmail(response.email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("auth-token")
+        ? localStorage.getItem("auth-token")
+        : "";
+    if (token.length) {
+      fetchUser(token);
+    } else {
+      router.push("/login");
+    }
+  });
   const cart = useSelector((state) => state.cart);
   const items = cart.cartItems;
-  const total = cart.cartTotalAmount;
+  const total =
+    cart.cartTotalAmount < 500
+      ? cart.cartTotalAmount + 30
+      : cart.cartTotalAmount;
+  const hasShipping = cart.cartTotalAmount < 500 ? true : false;
   const OID = Math.floor(Date.now() * Math.random());
-  const data = { items, total, OID, email: orderAddress.email, address: orderAddress };
+  const data = {
+    items,
+    total,
+    OID,
+    email: email,
+    address: orderAddress,
+    hasShipping,
+  };
   const PAYTM_HOST = process.env.NEXT_PUBLIC_PAYTM_HOST;
   const PAYTM_MID = process.env.NEXT_PUBLIC_PAYTM_MID;
   const initiatePayment = async () => {
@@ -191,7 +282,7 @@ export default function Checkout() {
                   Pincode
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   required
                   id="pincode"
                   value={orderAddress.pincode}
@@ -232,7 +323,7 @@ export default function Checkout() {
                 </label>
                 <input
                   type="text"
-                  id="City"
+                  id="city"
                   required
                   value={orderAddress.city}
                   readOnly={true}
@@ -355,7 +446,8 @@ export default function Checkout() {
               <div className="flex w-full justify-center items-center pt-1 md:pt-4  xl:pt-8 space-y-6 md:space-y-8 flex-col">
                 <button
                   onClick={initiatePayment}
-                  className="py-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800  w-full text-base font-medium leading-4 text-white bg-gray-800 hover:bg-black"
+                  disabled={isDisabled()}
+                  className="disabled:bg-gray-500 py-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800  w-full text-base font-medium leading-4 text-white bg-gray-800 hover:bg-black"
                 >
                   Confirm and proceed to payment
                 </button>

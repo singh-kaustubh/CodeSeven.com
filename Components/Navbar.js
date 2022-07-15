@@ -134,14 +134,6 @@ export default function Navbar() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/order">
-                      <a className="border-b-2 border-b-gray-400 flex items-center">
-                        <GiJigsawBox className="text-lg mx-0.5" />
-                        Orders
-                      </a>
-                    </Link>
-                  </li>
-                  <li>
                     <Link href="/coupons">
                       <a className="border-b-2 border-b-gray-400 flex items-center">
                         <RiCoupon2Line className="text-lg mx-0.5" />

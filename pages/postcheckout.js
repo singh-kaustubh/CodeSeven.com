@@ -1,16 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-
-export default function postcheckout() {
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import { actions } from "../store/carttSlice";
+import { useDispatch } from "react-redux";
+import Image from "next/image";
+import Link from "next/link";
+export default function Postcheckout({ data }) {
+  const router = useRouter();
+  const { orderId } = router.query;
+  const item = data.filter((item) => item.orderId === orderId)[0];
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actions.postcheckoutClearcart());
+  }, []);
   return (
     <div>
-      <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
+      <div className="py-24 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
         <div className="flex justify-start item-start space-y-2 flex-col ">
           <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9  text-gray-800">
-            Order #13432
+            Order #{item.orderId}
           </h1>
           <p className="text-base font-medium leading-6 text-gray-600">
-            21st Mart 2021 at 10:34 PM
+            Ordered on: {item.createdAt.slice(0, 10)}
           </p>
         </div>
         <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
@@ -19,98 +31,67 @@ export default function postcheckout() {
               <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
                 Customer’s Cart
               </p>
-              <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
-                <div className="pb-4 md:pb-8 w-full md:w-40">
-                  <img
-                    className="w-full hidden md:block"
-                    src="https://i.ibb.co/84qQR4p/Rectangle-10.png"
-                    alt="dress"
-                  />
-                  <img
-                    className="w-full md:hidden"
-                    src="https://i.ibb.co/L039qbN/Rectangle-10.png"
-                    alt="dress"
-                  />
-                </div>
-                <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
-                  <div className="w-full flex flex-col justify-start items-start space-y-8">
-                    <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
-                      Premium Quaility Dress
-                    </h3>
-                    <div className="flex justify-start items-start flex-col space-y-2">
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Style: </span> Italic
-                        Minimal Design
-                      </p>
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Size: </span> Small
-                      </p>
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Color: </span> Light
-                        Blue
-                      </p>
+              {item.productInfo.map((object, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full "
+                  >
+                    <div className="pb-4 md:pb-8 w-full md:w-40">
+                      <img
+                        className="w-full hidden md:block"
+                        src={object.img}
+                        alt="dress"
+                      />
+                      <img
+                        className="w-full md:hidden"
+                        src={object.img}
+                        alt="dress"
+                      />
+                    </div>
+                    <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
+                      <div className="w-full flex flex-col justify-start items-start space-y-8">
+                        <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
+                          {object.title}
+                        </h3>
+                        <div className="flex justify-start items-start flex-col space-y-2">
+                          <p className="text-sm leading-none text-gray-800">
+                            <span className="text-gray-300">Style: </span>{" "}
+                            {object.category}
+                          </p>
+                          <p className="text-sm leading-none text-gray-800">
+                            <span className="text-gray-300">Size: </span>{" "}
+                            {object.size}
+                          </p>
+                          <p className="text-sm leading-none text-gray-800">
+                            <span className="text-gray-300">Color: </span>{" "}
+                            {object.color}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex justify-between space-x-8 items-start w-full">
+                        <p className="text-base xl:text-lg leading-6">
+                          $
+                          {(item.hasShipping
+                            ? item.amount - 30
+                            : item.amount
+                          ).toFixed(2)}{" "}
+                        </p>
+                        <p className="text-base xl:text-lg leading-6 text-gray-800">
+                          {object.cartQuantity}
+                        </p>
+                        <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
+                          $
+                          {(item.hasShipping
+                            ? item.amount - 30
+                            : item.amount
+                          ).toFixed(2) * object.cartQuantity}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex justify-between space-x-8 items-start w-full">
-                    <p className="text-base xl:text-lg leading-6">
-                      $36.00{" "}
-                      <span className="text-red-300 line-through"> $45.00</span>
-                    </p>
-                    <p className="text-base xl:text-lg leading-6 text-gray-800">
-                      01
-                    </p>
-                    <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                      $36.00
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row  items-start md:items-center space-y-4  md:space-x-6 xl:space-x-8 w-full ">
-                <div className="w-full md:w-40">
-                  <img
-                    className="w-full hidden md:block"
-                    src="https://i.ibb.co/s6snNx0/Rectangle-17.png"
-                    alt="dress"
-                  />
-                  <img
-                    className="w-full md:hidden"
-                    src="https://i.ibb.co/BwYWJbJ/Rectangle-10.png"
-                    alt="dress"
-                  />
-                </div>
-                <div className="  flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0  ">
-                  <div className="w-full flex flex-col justify-start items-start space-y-8">
-                    <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
-                      High Quaility Italic Dress
-                    </h3>
-                    <div className="flex justify-start items-start flex-col space-y-2">
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Style: </span> Italic
-                        Minimal Design
-                      </p>
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Size: </span> Small
-                      </p>
-                      <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-300">Color: </span> Light
-                        Blue
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between space-x-8 items-start w-full">
-                    <p className="text-base xl:text-lg leading-6">
-                      $20.00{" "}
-                      <span className="text-red-300 line-through"> $30.00</span>
-                    </p>
-                    <p className="text-base xl:text-lg leading-6 text-gray-800">
-                      01
-                    </p>
-                    <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                      $20.00
-                    </p>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
             <div className="flex justify-center md:flex-row flex-col items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
               <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 space-y-6   ">
@@ -122,24 +103,32 @@ export default function postcheckout() {
                     <p className="text-base leading-4 text-gray-800">
                       Subtotal
                     </p>
-                    <p className="text-base leading-4 text-gray-600">$56.00</p>
+                    <p className="text-base leading-4 text-gray-600">
+                      $
+                      {(item.hasShipping
+                        ? item.amount - 30
+                        : item.amount
+                      ).toFixed(2)}
+                    </p>
                   </div>
                   <div className="flex justify-between items-center w-full">
                     <p className="text-base leading-4 text-gray-800">
                       Discount{" "}
                       <span className="bg-gray-200 p-1 text-xs font-medium leading-3  text-gray-800">
-                        STUDENT
+                        Free Delivery over $ 499
                       </span>
                     </p>
                     <p className="text-base leading-4 text-gray-600">
-                      -$28.00 (50%)
+                      -${item.hasShipping ? 0 : 30}
                     </p>
                   </div>
                   <div className="flex justify-between items-center w-full">
                     <p className="text-base leading-4 text-gray-800">
                       Shipping
                     </p>
-                    <p className="text-base leading-4 text-gray-600">$8.00</p>
+                    <p className="text-base leading-4 text-gray-600">
+                      ${item.hasShipping ? 30 : 0}
+                    </p>
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full">
@@ -147,7 +136,7 @@ export default function postcheckout() {
                     Total
                   </p>
                   <p className="text-base font-semibold leading-4 text-gray-600">
-                    $36.00
+                    ${item.amount}
                   </p>
                 </div>
               </div>
@@ -166,22 +155,30 @@ export default function postcheckout() {
                     </div>
                     <div className="flex flex-col justify-start items-center">
                       <p className="text-lg leading-6 font-semibold text-gray-800">
-                        DPD Delivery
+                        Trackon Delivery
                         <br />
                         <span className="font-normal">
-                          Delivery with 24 Hours
+                          Delivery within 7 days
                         </span>
                       </p>
                     </div>
                   </div>
                   <p className="text-lg font-semibold leading-6 text-gray-800">
-                    $8.00
+                    $30.00
                   </p>
                 </div>
                 <div className="w-full flex justify-center items-center">
-                  <button className="hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-gray-800 text-base font-medium leading-4 text-white">
-                    View Carrier Details
-                  </button>
+                  <Link
+                    href={"https://trackon.in/"}
+                    className="w-full"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    passHref
+                  >
+                    <button className="hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-gray-800 text-base font-medium leading-4 text-white">
+                      View Carrier Details
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -193,9 +190,11 @@ export default function postcheckout() {
             <div className="flex  flex-col md:flex-row xl:flex-col justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 xl:space-x-0 ">
               <div className="flex flex-col justify-start items-start flex-shrink-0">
                 <div className="flex justify-center  w-full  md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-                  <img
-                    src="https://i.ibb.co/5TSg7f6/Rectangle-18.png"
+                  <Image
+                    src="/images/profile.jpg"
                     alt="avatar"
+                    width={50}
+                    height={50}
                   />
                   <div className=" flex justify-start items-start flex-col space-y-2">
                     <p className="text-base font-semibold leading-4 text-left text-gray-800">
@@ -229,7 +228,7 @@ export default function postcheckout() {
                     />
                   </svg>
                   <p className="cursor-pointer text-sm leading-5 text-gray-800">
-                    david89@gmail.com
+                    {item.email}
                   </p>
                 </div>
               </div>
@@ -240,7 +239,7 @@ export default function postcheckout() {
                       Shipping Address
                     </p>
                     <p className="w-48 lg:w-full xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                      180 North King Street, Northhampton MA 1060
+                      {item.address.address}
                     </p>
                   </div>
                   <div className="flex justify-center md:justify-start  items-center md:items-start flex-col space-y-4 ">
@@ -248,7 +247,7 @@ export default function postcheckout() {
                       Billing Address
                     </p>
                     <p className="w-48 lg:w-full xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                      180 North King Street, Northhampton MA 1060
+                      {item.address.address}
                     </p>
                   </div>
                 </div>
@@ -264,4 +263,13 @@ export default function postcheckout() {
       </div>
     </div>
   );
+}
+export async function getServerSideProps() {
+  const response = await fetch("http://localhost:3000/api/getOrders", {
+    method: "GET",
+  });
+  const data = await response.json();
+  return {
+    props: { data },
+  };
 }

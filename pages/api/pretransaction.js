@@ -8,9 +8,11 @@ const handler = async (req, res) => {
   if (req.method == `POST`) {
     const o = new Order({
       orderId: req.body.OID,
-      email: "kaustubhsingh@gmail.com",
+      productInfo: req.body.items,
+      email: req.body.email,
       address: req.body.address,
       amount: req.body.total,
+      hasShipping:req.body.hasShipping
     });
     await o.save();
     var paytmParams = {};
@@ -19,7 +21,7 @@ const handler = async (req, res) => {
       mid: MID,
       websiteName: "YOUR_WEBSITE_NAME",
       orderId: req.body.OID,
-      callbackUrl: "https://localhost:3000/api/postTransaction",
+      callbackUrl: "http://localhost:3000/api/posttransaction",
       txnAmount: {
         value: req.body.total,
         currency: "INR",
