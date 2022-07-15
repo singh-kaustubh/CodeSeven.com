@@ -12,7 +12,7 @@ const handler = async (req, res) => {
       email: req.body.email,
       address: req.body.address,
       amount: req.body.total,
-      hasShipping:req.body.hasShipping
+      hasShipping: req.body.hasShipping,
     });
     await o.save();
     var paytmParams = {};

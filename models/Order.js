@@ -8,6 +8,7 @@ const OrderSchema = new mongoose.Schema(
     address: { type: Object, required: true },
     amount: { type: Number, required: true },
     status: { type: String, required: true, default: "Initiated" },
+    hasShipping: { type: Boolean, required: true },
   },
   { timestamps: true }
 );

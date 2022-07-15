@@ -43,7 +43,6 @@ export default function Profile() {
         : "";
     if (token.length) {
       fetchData(token);
-      // console.log(orders);
     } else {
       router.push("/login");
     }

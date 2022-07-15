@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { actions } from "../store/carttSlice";
 import { useDispatch } from "react-redux";
@@ -11,8 +11,31 @@ export default function Postcheckout({ data }) {
   const { orderId } = router.query;
   const item = data.filter((item) => item.orderId === orderId)[0];
   const dispatch = useDispatch();
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const fetchUser = async (token) => {
+    const res = await fetch("http://localhost:3000/api/fetchUser", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ token: token }),
+    });
+    const response = await res.json();
+    setName(response.name);
+    setEmail(response.email);
+  };
   useEffect(() => {
     dispatch(actions.postcheckoutClearcart());
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("auth-token")
+        ? localStorage.getItem("auth-token")
+        : "";
+    if (token.length) {
+      fetchUser(token);
+    } else {
+      router.push("/login");
+    }
   }, []);
   return (
     <div>
@@ -71,21 +94,13 @@ export default function Postcheckout({ data }) {
                       </div>
                       <div className="flex justify-between space-x-8 items-start w-full">
                         <p className="text-base xl:text-lg leading-6">
-                          $
-                          {(item.hasShipping
-                            ? item.amount - 30
-                            : item.amount
-                          ).toFixed(2)}{" "}
+                          ${object.price}{" "}
                         </p>
                         <p className="text-base xl:text-lg leading-6 text-gray-800">
                           {object.cartQuantity}
                         </p>
                         <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                          $
-                          {(item.hasShipping
-                            ? item.amount - 30
-                            : item.amount
-                          ).toFixed(2) * object.cartQuantity}
+                          ${object.price * object.cartQuantity}
                         </p>
                       </div>
                     </div>
@@ -198,10 +213,7 @@ export default function Postcheckout({ data }) {
                   />
                   <div className=" flex justify-start items-start flex-col space-y-2">
                     <p className="text-base font-semibold leading-4 text-left text-gray-800">
-                      David Kent
-                    </p>
-                    <p className="text-sm leading-5 text-gray-600">
-                      10 Previous Orders
+                      {name}
                     </p>
                   </div>
                 </div>
@@ -228,7 +240,7 @@ export default function Postcheckout({ data }) {
                     />
                   </svg>
                   <p className="cursor-pointer text-sm leading-5 text-gray-800">
-                    {item.email}
+                    {email}
                   </p>
                 </div>
               </div>
