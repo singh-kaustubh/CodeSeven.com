@@ -3,16 +3,19 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../store/carttSlice";
+import Link from "next/link";
 import Head from "next/head";
 import Script from "next/script";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 export default function Checkout() {
   const dispatch = useDispatch();
   const handleRemove = (item) => {
     dispatch(actions.removeFromCart(item));
     return;
   };
+  const cart = useSelector((state) => state.cart);
   const [orderAddress, setOrderAddress] = useState({
     name: "",
     email: "",
@@ -56,7 +59,8 @@ export default function Checkout() {
       orderAddress.name.length < 3 ||
       orderAddress.phone.length < 3 ||
       orderAddress.pincode.length < 3 ||
-      orderAddress.state.length < 3
+      orderAddress.state.length < 3 ||
+      cart.cartTotalAmount == 0
     ) {
       return true;
     } else {
@@ -94,6 +98,7 @@ export default function Checkout() {
       console.log(error);
     }
   };
+  const router = useRouter();
   useEffect(() => {
     const token =
       typeof window !== "undefined" && localStorage.getItem("auth-token")
@@ -105,12 +110,12 @@ export default function Checkout() {
       router.push("/login");
     }
   });
-  const cart = useSelector((state) => state.cart);
   const items = cart.cartItems;
-  const total =
+  const total = (
     cart.cartTotalAmount < 500
-      ? cart.cartTotalAmount + 30
-      : cart.cartTotalAmount;
+      ? 1.18 * cart.cartTotalAmount + 30
+      : 1.18 * cart.cartTotalAmount
+  ).toFixed(2);
   const hasShipping = cart.cartTotalAmount < 500 ? true : false;
   const OID = Math.floor(Date.now() * Math.random());
   const data = {
@@ -132,33 +137,49 @@ export default function Checkout() {
       body: JSON.stringify(data),
     });
     const txnbody = await response.json();
-    const txnToken = txnbody.txnToken;
-    var config = {
-      root: "",
-      flow: "DEFAULT",
-      data: {
-        orderId: OID,
-        token: txnToken,
-        tokenType: "TXN_TOKEN",
-        amount: total,
-      },
-      handler: {
-        notifyMerchant: function (eventName, data) {
-          console.log("notifyMerchant handler function called");
-          console.log("eventName => ", eventName);
-          console.log("data => ", data);
+    let txnToken;
+    if (txnbody.success) {
+      txnToken = txnbody.txnToken;
+      var config = {
+        root: "",
+        flow: "DEFAULT",
+        data: {
+          orderId: OID,
+          token: txnToken,
+          tokenType: "TXN_TOKEN",
+          amount: total,
         },
-      },
-    };
-    {
-      typeof window !== "undefined" &&
-        window.Paytm.CheckoutJS.init(config)
-          .then(function onSuccess() {
-            window.Paytm.CheckoutJS.invoke();
-          })
-          .catch(function onError(error) {
-            console.log("error => ", error);
-          });
+        handler: {
+          notifyMerchant: function (eventName, data) {
+            console.log("notifyMerchant handler function called");
+            console.log("eventName => ", eventName);
+            console.log("data => ", data);
+          },
+        },
+      };
+      {
+        typeof window !== "undefined" &&
+          window.Paytm.CheckoutJS.init(config)
+            .then(function onSuccess() {
+              window.Paytm.CheckoutJS.invoke();
+            })
+            .catch(function onError(error) {
+              console.log("error => ", error);
+            });
+      }
+    } else if (!txnbody.success) {
+      toast.warn(txnbody.error, {
+        theme: "dark",
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(actions.postcheckoutClearcart());
+      return;
     }
   };
   const handleSubmit = async (e) => {
@@ -350,9 +371,11 @@ export default function Checkout() {
             Paid using: Credit Card/Debit Card/UPI/COD
           </p>
           {!cart.cartItems.length && (
-            <p className="text-center text-3xl leading-none mt-10 text-gray-800">
-              Your cart is empty! Browse items now 😎
-            </p>
+            <Link href={"/"}>
+              <p className="cursor-pointer text-center text-3xl leading-none mt-10 text-gray-800">
+                Your cart is empty! Browse items now 😎
+              </p>
+            </Link>
           )}
           <div className="flex justify-center items-center w-full mt-8  flex-col space-y-4 ">
             {cart.cartItems.map((item, index) => {
@@ -403,9 +426,11 @@ export default function Checkout() {
             <div className="flex flex-col space-y-4 w-full">
               <div className="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                 <div className="flex justify-between  w-full">
-                  <p className="text-base leading-4 text-gray-800">Subtotal</p>
+                  <p className="text-base leading-4 text-gray-800">
+                    Subtotal (incl. 18% GST)
+                  </p>
                   <p className="text-base leading-4 text-gray-600">
-                    ${cart.cartTotalAmount.toFixed(2)}
+                    ${(1.18 * cart.cartTotalAmount).toFixed(2)}
                   </p>
                 </div>
                 <div className="flex justify-between  w-full">
@@ -437,7 +462,7 @@ export default function Checkout() {
                 <p className="text-base font-semibold leading-4 text-gray-600">
                   $
                   {(
-                    cart.cartTotalAmount +
+                    1.18 * cart.cartTotalAmount +
                     (cart.cartTotalQuantity &&
                       (cart.cartTotalAmount > 499 ? 0 : 30))
                   ).toFixed(2)}

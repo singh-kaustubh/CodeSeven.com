@@ -175,34 +175,55 @@ export default function Post({ data }) {
                         <div key={index}>
                           {val == "red" && (
                             <button
-                              onClick={() => refreshVariantColor(size, "red")}
+                              onClick={() =>
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "red"
+                                )
+                              }
                               className="border-2 border-gray-900 ml-1 bg-red-900 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "green" && (
                             <button
-                              onClick={() => refreshVariantColor(size, "green")}
+                              onClick={() =>
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "green"
+                                )
+                              }
                               className="border-2 border-gray-900 ml-1 bg-green-700 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "yellow" && (
                             <button
                               onClick={() =>
-                                refreshVariantColor(size, "yellow")
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "yellow"
+                                )
                               }
                               className="border-2 border-gray-900 ml-1 bg-yellow rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "blue" && (
                             <button
-                              onClick={() => refreshVariantColor(size, "blue")}
+                              onClick={() =>
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "blue"
+                                )
+                              }
                               className="border-2 border-gray-900 ml-1 bg-blue-700 rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "purple" && (
                             <button
                               onClick={() =>
-                                refreshVariantColor(size, "purple")
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "purple"
+                                )
                               }
                               className="border-2 border-gray-900 ml-1 bg-purple rounded-full w-6 h-6 focus:outline-none"
                             ></button>
@@ -215,13 +236,23 @@ export default function Post({ data }) {
                           )}
                           {val == "black" && (
                             <button
-                              onClick={() => refreshVariantColor(size, "black")}
+                              onClick={() =>
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "black"
+                                )
+                              }
                               className="border-2 border-gray-900 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}
                           {val == "white" && (
                             <button
-                              onClick={() => refreshVariantColor(size, "white")}
+                              onClick={() =>
+                                refreshVariantColor(
+                                  Object.keys(item._color[val])[0],
+                                  "white"
+                                )
+                              }
                               className="border-2 border-gray-900 ml-1 bg-white rounded-full w-6 h-6 focus:outline-none"
                             ></button>
                           )}

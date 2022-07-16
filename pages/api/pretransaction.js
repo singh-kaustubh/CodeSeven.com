@@ -2,10 +2,32 @@ import { request } from "https";
 import connectDb from "../../middlewear/mongoose";
 import PaytmChecksum from "paytmchecksum";
 import Order from "../../models/Order";
+import Product from "../../models/Product";
 const handler = async (req, res) => {
   const MID = process.env.NEXT_PUBLIC_PAYTM_MID;
   const MKEY = process.env.PAYTM_MKEY;
   if (req.method == `POST`) {
+    const cart = req.body.items;
+    let sumtotal = 0;
+    for (let object of cart) {
+      const temp = await Product.find({ _id: object._id });
+      const product = temp[0];
+      sumtotal += product.price * object.cartQuantity;
+      if (product.price != object.price) {
+        res.status(500).json({
+          success: false,
+          error: "The prices in the cart have changed",
+        });
+        return;
+      }
+    }
+    const val = req.body.hasShipping ? req.body.total - 30 : req.body.total;
+    if (Math.floor(Math.abs(val - 1.18 * sumtotal))) {
+      res
+        .status(500)
+        .json({ success: false, error: "The prices in the cart have changed" });
+      return;
+    }
     const o = new Order({
       orderId: req.body.OID,
       productInfo: req.body.items,
@@ -57,7 +79,9 @@ const handler = async (req, res) => {
               response += chunk;
             });
             post_res.on("end", function () {
-              resolve(JSON.parse(response).body);
+              let ress = JSON.parse(response).body;
+              ress.success = true;
+              resolve(ress);
             });
           });
           post_req.write(post_data);

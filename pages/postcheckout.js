@@ -163,7 +163,7 @@ export default function Postcheckout({ data }) {
                   <div className="flex justify-center items-center space-x-4">
                     <div className="w-8 h-8">
                       <img
-                        clasName="w-full h-full"
+                        className="w-full h-full"
                         alt="logo"
                         src="https://i.ibb.co/L8KSdNQ/image-3.png"
                       />

@@ -11,7 +11,6 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { AiOutlineMinusCircle, AiOutlineLogin } from "react-icons/ai";
 import { BsCartX } from "react-icons/bs";
 import { CgCloseR, CgProfile } from "react-icons/cg";
-import { GiJigsawBox } from "react-icons/gi";
 import { GrPower } from "react-icons/gr";
 import { RiCoupon2Line } from "react-icons/ri";
 import Link from "next/link";
@@ -49,6 +48,13 @@ export default function Navbar() {
   const data =
     typeof window !== "undefined" && localStorage.getItem("auth-token");
   const cart = useSelector((state) => state.cart);
+  const isDisabled = () => {
+    if (cart.cartTotalAmount) {
+      return false;
+    } else {
+      return true;
+    }
+  };
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     toast.success(`Successfully logged out!`, {
@@ -355,7 +361,8 @@ export default function Navbar() {
                         <Link className="flex" href={"/checkout"}>
                           <button
                             onClick={toggleCart}
-                            className=" flex rounded-lg justify-center text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
+                            disabled={isDisabled()}
+                            className=" disabled:bg-gray-500 flex rounded-lg justify-center text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
                           >
                             <BsBagFill className="mr-2" />
                             Checkout
