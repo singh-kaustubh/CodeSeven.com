@@ -18,7 +18,6 @@ const handler = async (req, res) => {
           if (item == cl) {
             Object.keys(product._color[item]).forEach((obj) => {
               if (obj == sz) {
-                console.log(product._color[item][obj]);
                 product._color[item][obj] =
                   product._color[item][obj] - object.cartQuantity;
                 return;
@@ -28,11 +27,17 @@ const handler = async (req, res) => {
         });
         product.availableQty = product.availableQty - object.cartQuantity;
         await Product.findByIdAndUpdate(object._id, product);
-        console.log(product);
       } else if (object.size) {
         let product = await Product.findById(object._id);
         const val = object.size;
-        product.size.val = product.size.val - object.cartQuantity;
+        Object.keys(product._sizeQty).forEach((item) => {
+          if (item == val) {
+            product._sizeQty[item] =
+              product._sizeQty[item] - object.cartQuantity;
+            return;
+          }
+        });
+        product.availableQty = product.availableQty - object.cartQuantity;
         await Product.findByIdAndUpdate(object._id, product);
       } else {
         let product = await Product.findById(object._id);

@@ -28,6 +28,66 @@ const handler = async (req, res) => {
         .json({ success: false, error: "The prices in the cart have changed" });
       return;
     }
+    for (let object of cart) {
+      if (object.color) {
+        let product = await Product.findById(object._id);
+        const cl = object.color;
+        const sz = object.size;
+        Object.keys(product._color).forEach((item) => {
+          if (item == cl) {
+            Object.keys(product._color[item]).forEach((obj) => {
+              if (obj == sz) {
+                const val = product._color[item][obj] - object.cartQuantity;
+                if (val < 0) {
+                  res.status(500).json({
+                    success: false,
+                    error: `Only ${
+                      object.cartQuantity - product._color[item][obj]
+                    } items left for ${
+                      product.title
+                    }, Kindly decrease the quantity and try again!`,
+                  });
+                  return;
+                }
+              }
+            });
+          }
+        });
+      } else if (object.size) {
+        let product = await Product.findById(object._id);
+        const val = object.size;
+        Object.keys(product._sizeQty).forEach((item) => {
+          if (item == val) {
+            const val = product._sizeQty[item] - object.cartQuantity;
+            if (val < 0) {
+              res.status(500).json({
+                success: false,
+                error: `Only ${
+                  object.cartQuantity - product._sizeQty[item]
+                } items left for ${
+                  product.title
+                }, Kindly decrease the quantity and try again!`,
+              });
+              return;
+            }
+          }
+        });
+      } else {
+        let product = await Product.findById(object._id);
+        const val = product.availableQty - object.cartQuantity;
+        if (val < 0) {
+          res.status(500).json({
+            success: false,
+            error: `Only ${
+              object.cartQuantity - product.availableQty
+            } items left for ${
+              product.title
+            }, Kindly decrease the quantity and try again!`,
+          });
+          return;
+        }
+      }
+    }
     const o = new Order({
       orderId: req.body.OID,
       productInfo: req.body.items,

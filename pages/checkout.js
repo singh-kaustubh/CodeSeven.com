@@ -72,7 +72,10 @@ export default function Checkout() {
     setOrderAddress({ ...orderAddress, [e.target.name]: e.target.value });
     if (e.target.name == "pincode" && e.target.value.length == 6) {
       fetchCitystate(e.target.value);
-    } else if (e.target.name == "pincode" && e.target.value.length != 6) {
+    } else if (
+      e.target.name == "pincode" &&
+      (e.target.value.length != 6 || !Number.isInteger(e.target.value))
+    ) {
       setOrderAddress({
         ...orderAddress,
         state: "Please enter a valid pincode",
@@ -287,6 +290,9 @@ export default function Checkout() {
                   type="number"
                   required
                   id="phone"
+                  min="1000000000"
+                  max="9999999999"
+                  placeholder="Enter 10 digit phone number"
                   onChange={handleChange}
                   value={orderAddress.phone}
                   name="phone"
@@ -305,7 +311,10 @@ export default function Checkout() {
                 <input
                   type="text"
                   required
+                  placeholder="Enter 6 digit pincode"
                   id="pincode"
+                  minLength={6}
+                  maxLength={6}
                   value={orderAddress.pincode}
                   onChange={handleChange}
                   name="pincode"
