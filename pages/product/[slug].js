@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +13,7 @@ export default function Post({ data }) {
   const router = useRouter();
   const { slug } = router.query;
   const item = data.filter((item) => item._id === slug)[0];
+  const [avail, setAvail] = useState(item.availableQty ? true : false);
   const url = `https://api.postalpincode.in/pincode`;
   const [pin, setPin] = useState(0);
   const [res, setRes] = useState(null);
@@ -58,9 +60,38 @@ export default function Post({ data }) {
     item._color ? Object.keys(item._color)[0] : item.color
   );
   const [img, setImg] = useState(item.img);
+  useEffect(() => {
+    checkAvailable();
+  }, []);
+  const checkAvailable = (color, size) => {
+    if (color) {
+      Object.keys(item._color).forEach((val) => {
+        if (val == color) {
+          Object.keys(item._color[val]).forEach((obj) => {
+            if (obj == size) {
+              const qty = item._color[val][obj];
+              setAvail(qty ? true : false);
+            }
+          });
+        }
+      });
+    } else if (size) {
+      Object.keys(item._sizeQty).forEach((val) => {
+        if (val == size) {
+          const qty = item._sizeQty[val];
+          setAvail(qty ? true : false);
+        }
+      });
+    } else {
+      if (item.availableQty > 0) {
+        setAvail(true);
+      }
+    }
+  };
   const refreshVariantColor = (size, color) => {
     setColor(color);
     setSize(size);
+    checkAvailable(color, size);
     setImg(
       item.var_img
         ? item.var_img[color]
@@ -78,8 +109,8 @@ export default function Post({ data }) {
       progress: undefined,
     });
   };
-  const refreshVariantSize = (size) => {
-    setSize(size);
+  const refreshVariantSize = (sizep) => {
+    setSize(sizep);
     toast.info("Changed product size!", {
       theme: "dark",
       position: "bottom-left",
@@ -90,6 +121,7 @@ export default function Post({ data }) {
       draggable: true,
       progress: undefined,
     });
+    checkAvailable(null, sizep);
   };
   const [colsize, setColsize] = useState(
     item._color ? Object.keys(item._color[color]) : item.size
@@ -297,14 +329,16 @@ export default function Post({ data }) {
                 )}
                 <Link href={"/checkout"}>
                   <button
+                    disabled={!avail}
                     onClick={() => handleBuynow({ ...item, size, color, img })}
-                    className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1  focus:outline-none hover:scale-105 rounded"
+                    className="disabled:bg-red-700 flex ml-2 text-white bg-red-900 border-0 py-2 px-1  focus:outline-none hover:scale-105 rounded"
                   >
                     Buy Now
                   </button>
                 </Link>
                 <button
-                  className="flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
+                  disabled={!avail}
+                  className="disabled:bg-red-700 flex ml-2 text-white bg-red-900 border-0 py-2 px-1 focus:outline-none hover:scale-105 rounded"
                   onClick={() => handleAddtoCart({ ...item, size, color, img })}
                 >
                   Add to Cart
@@ -312,7 +346,11 @@ export default function Post({ data }) {
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-2xl text-gray-900">
-                  ${item.price}
+                  {avail ? (
+                    <span>${item.price}</span>
+                  ) : (
+                    <span className="text-base">Out of stock!</span>
+                  )}
                 </span>
                 <div className="flex mx-auto">
                   <input

@@ -46,7 +46,7 @@ export default function Wishlist() {
                         </p>
                         <button
                           onClick={() => handleRemove(item)}
-                          className="flex text-sm  text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded"
+                          className="flex text-sm h-full text-white bg-red-900 border-0 px-1 mx-2 py-2 focus:outline-none hover:scale-105 rounded"
                         >
                           Remove
                         </button>
