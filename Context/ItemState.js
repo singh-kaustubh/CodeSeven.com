@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { createContext } from "react";
 export const ItemContext = createContext();
@@ -15,11 +16,12 @@ export const ItemProvider = ({ children }) => {
       console.log(error);
     }
   };
+  const rapidapi = process.env.NEXT_PUBLIC_RAPID_API_KEY;
   const fetchfaishonItems = async () => {
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "d257aac864mshd9c5ce5448c2e97p18d2cejsn9f73baa9e7b4",
+        "X-RapidAPI-Key": rapidapi,
         "X-RapidAPI-Host": "chicmi.p.rapidapi.com",
       },
     };

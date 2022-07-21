@@ -219,7 +219,7 @@ export default function Login() {
             </div>
             <div className="flex flex-wrap mt-6">
               <div className="w-1/2">
-                <Link href="/signup" className="text-white">
+                <Link href="/forget" className="text-white">
                   <span className="text-white cursor-pointer">
                     Forget password
                   </span>
