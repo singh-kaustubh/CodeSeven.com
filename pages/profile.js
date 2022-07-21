@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
+import { ImProfile } from "react-icons/im";
 import { useRouter } from "next/router";
 import Link from "next/link";
 export default function Profile() {
@@ -7,7 +8,15 @@ export default function Profile() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
+  const [password, setPassword] = useState();
+  const [npassword, setNpassword] = useState();
+  const [cnpassword, setCnpassword] = useState();
+  const [show, setShow] = useState(true);
+  const [token, setToken] = useState();
   const router = useRouter();
+  const toggleCart = () => {
+    setShow(!show);
+  };
   const fetchData = async (token) => {
     try {
       const res = await fetch("http://localhost:3000/api/fetchUser", {
@@ -42,14 +51,194 @@ export default function Profile() {
         ? localStorage.getItem("auth-token")
         : "";
     if (token.length) {
+      setToken(token);
       fetchData(token);
     } else {
       router.push("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleChange = (e) => {
+    if (e.target.name == "name") {
+      setName(e.target.value);
+    } else if (e.target.name == "phone") {
+      setPhone(parseInt(e.target.value));
+    } else if (e.target.name == "password") {
+      setPassword(e.target.value);
+    } else if (e.target.name == "npassword") {
+      setNpassword(e.target.value);
+    } else if (e.target.name == "cnpassword") {
+      setCnpassword(e.target.value);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = { name, token, email, phone, password, npassword, cnpassword };
+    const response = await fetch(`http://localhost:3000/api/updateUser`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    console.log(data);
+  };
   return (
     <main className="profile-page min-h-[50vh]">
+      {show && (
+        <div>
+          <div
+            className="py-24 bg-gray-200 h-full bg-opacity-70 transition duration-150 ease-in-out z-10 fixed top-0 right-0 bottom-0 left-0"
+            id="modal"
+          >
+            <div
+              role="alert"
+              className="container mx-auto w-11/12 md:w-2/3 max-w-lg"
+            >
+              <div className="relative py-8 px-5 md:px-10 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
+                <div className="w-full text-gray-600 mb-3">
+                  <ImProfile className="text-3xl mx-auto text-white" />
+                </div>
+                <form onSubmit={handleSubmit}>
+                  <h1 className="text-gray-800 dark:text-white text-center  font-lg font-bold tracking-normal leading-tight mb-4">
+                    Enter Personal Information
+                  </h1>
+                  <label
+                    htmlFor="name"
+                    className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                  >
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    onChange={handleChange}
+                    name="name"
+                    value={name}
+                    className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                  />
+                  <label
+                    htmlFor="email"
+                    className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                  >
+                    E-mail address (non-mutable)
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    onChange={handleChange}
+                    name="email"
+                    value={email}
+                    className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                  />
+                  <label
+                    htmlFor="phone"
+                    className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    id="phone"
+                    type="text"
+                    onChange={handleChange}
+                    name="phone"
+                    value={phone}
+                    className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                  />
+                  <div className="flex justify-between space-x-1">
+                    <div className="w-1/2">
+                      <label
+                        htmlFor="npassword"
+                        className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                      >
+                        New Password (optional)
+                      </label>
+                      <input
+                        id="npassword"
+                        type="password"
+                        onChange={handleChange}
+                        name="npassword"
+                        value={npassword}
+                        className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <label
+                        htmlFor="cnpassword"
+                        className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                      >
+                        Confirm New Password
+                      </label>
+                      <input
+                        id="cnpassword"
+                        type="password"
+                        onChange={handleChange}
+                        name="cnpassword"
+                        value={cnpassword}
+                        className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                      />
+                    </div>
+                  </div>
+                  <label
+                    htmlFor="cnpassword"
+                    className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                  >
+                    Current Password *
+                  </label>
+                  <input
+                    required
+                    id="password"
+                    type="password"
+                    onChange={handleChange}
+                    name="password"
+                    placeholder=" "
+                    value={password}
+                    className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                  />
+                  <div className="flex items-center space-x-1 justify-start w-full">
+                    <button
+                      type="submit"
+                      className="bg-red-800 hover:scale-105 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      className="bg-gray-100 hover:scale-105 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                      onClick={toggleCart}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+                <button
+                  className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
+                  onClick={toggleCart}
+                  aria-label="close modal"
+                  role="button"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="icon icon-tabler icon-tabler-x"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2.5"
+                    stroke="currentColor"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <section className="relative block" style={{ height: "500px" }}>
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover"
@@ -103,6 +292,7 @@ export default function Profile() {
                     <button
                       className="bg-red-800 hover:scale-105 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
                       type="button"
+                      onClick={toggleCart}
                       style={{ transition: "all .15s ease" }}
                     >
                       Edit Profile
@@ -133,10 +323,9 @@ export default function Profile() {
                     </label>
                     <input
                       type="email"
-                      id="email"
-                      name="email"
-                      placeholder={email}
-                      className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                      value={email}
+                      readOnly={true}
+                      className="w-full text-center bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                   </div>
                   <div className="relative flex-grow w-full">
@@ -148,25 +337,9 @@ export default function Profile() {
                     </label>
                     <input
                       type="number"
-                      id="number"
-                      name="number"
-                      placeholder={phone}
-                      className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    />
-                  </div>
-                  <div className="relative flex-grow w-full">
-                    <label
-                      htmlFor="password"
-                      className="leading-7 text-sm text-gray-600"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="***********"
-                      id="password"
-                      name="password"
-                      className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                      value={phone}
+                      readOnly={true}
+                      className="w-full text-center bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     />
                   </div>
                 </div>
