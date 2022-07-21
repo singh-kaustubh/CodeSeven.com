@@ -20,7 +20,6 @@ const handler = async (req, res) => {
     const response = jwt.verify(token, jwtkey);
     const temp = await User.find({ email: response.email });
     const usr = temp[0];
-    console.log(temp[0]);
     const bytes = CryptoJS.AES.decrypt(usr.password, secKey);
     const decryptPass = bytes.toString(CryptoJS.enc.Utf8);
     if (decryptPass !== password) {
@@ -37,7 +36,6 @@ const handler = async (req, res) => {
     if (npassword) {
       usr.password = CryptoJS.AES.encrypt(npassword, secKey).toString();
     }
-    console.log(usr);
     try {
       await User.findOneAndUpdate(
         { email: usr.email },
