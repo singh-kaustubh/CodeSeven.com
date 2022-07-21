@@ -8,7 +8,10 @@ const handler = async (req, res) => {
     const secKey = process.env.SECRET_KEY_CRYPTO;
     const { name, token, phone, npassword, cnpassword, password } =
       await req.body;
-    if (npassword && cnpassword && npassword !== cnpassword) {
+    if (
+      (npassword && npassword !== cnpassword) ||
+      (cnpassword && npassword !== cnpassword)
+    ) {
       return res.status(500).send({
         success: false,
         error: "The new password and confirm new password do not match!",
@@ -17,6 +20,7 @@ const handler = async (req, res) => {
     const response = jwt.verify(token, jwtkey);
     const temp = await User.find({ email: response.email });
     const usr = temp[0];
+    console.log(temp[0]);
     const bytes = CryptoJS.AES.decrypt(usr.password, secKey);
     const decryptPass = bytes.toString(CryptoJS.enc.Utf8);
     if (decryptPass !== password) {
@@ -26,18 +30,23 @@ const handler = async (req, res) => {
     }
     if (name) {
       usr.name = name;
-    } else if (phone) {
+    }
+    if (phone) {
       usr.phone = phone;
-    } else if (e.target.name == "npassword") {
+    }
+    if (npassword) {
       usr.password = CryptoJS.AES.encrypt(npassword, secKey).toString();
     }
+    console.log(usr);
     try {
-      const res = await User.findByIdAndUpdate(
-        usr._id,
+      await User.findOneAndUpdate(
+        { email: usr.email },
         { $set: usr },
         { new: true }
       );
-      return res.status(200).json({ success: true, res: res });
+      return res
+        .status(200)
+        .json({ success: true, message: "Successfully updated the user!" });
     } catch (error) {
       console.log(error);
       return res
