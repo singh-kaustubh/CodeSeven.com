@@ -248,6 +248,14 @@ export default function Postcheckout({ data }) {
                 <div className="flex justify-center md:justify-start xl:flex-col flex-col md:space-x-6 lg:space-x-8 xl:space-x-0 space-y-4 xl:space-y-12 md:space-y-0 md:flex-row  items-center md:items-start ">
                   <div className="flex justify-center md:justify-start  items-center md:items-start flex-col space-y-4 xl:mt-8">
                     <p className="text-base font-semibold leading-4 text-center md:text-left text-gray-800">
+                      Order Status:
+                    </p>
+                    <p className="w-48 lg:w-full xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
+                      {item.status}
+                    </p>
+                  </div>
+                  <div className="flex justify-center md:justify-start  items-center md:items-start flex-col space-y-4 xl:mt-8">
+                    <p className="text-base font-semibold leading-4 text-center md:text-left text-gray-800">
                       Shipping Address
                     </p>
                     <p className="w-48 lg:w-full xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
