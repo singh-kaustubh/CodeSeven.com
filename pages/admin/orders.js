@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../../src/theme/theme";
 import { Grid } from "@mui/material";
 import ProductPerfomance from "../../src/components/dashboard/ProductPerfomance";
-export default function Users() {
+export default function Orders() {
   return (
     <ThemeProvider theme={theme}>
       <style jsx global>{`

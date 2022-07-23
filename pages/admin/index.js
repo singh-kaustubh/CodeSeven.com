@@ -10,6 +10,11 @@ import theme from "../../src/theme/theme";
 export default function Index() {
   return (
     <ThemeProvider theme={theme}>
+      <style jsx global>{`
+        footer {
+          display: none;
+        }
+      `}</style>
       <CssBaseline />
       <FullLayout>
         <Grid container spacing={0}>

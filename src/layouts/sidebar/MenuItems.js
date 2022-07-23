@@ -6,27 +6,27 @@ const Menuitems = [
   },
   {
     title: "Add product",
-    icon: "disc",
+    icon: "plus-circle",
     href: "/admin/addProduct",
   },
   {
     title: "View Product",
-    icon: "layout",
+    icon: "eye",
     href: "/admin/viewProduct",
   },
   {
     title: "Remove Product",
-    icon: "info",
+    icon: "x-square",
     href: "/admin/removeProduct",
   },
   {
     title: "Users",
-    icon: "star",
-    href: "/admin/Users",
+    icon: "users",
+    href: "/admin/users",
   },
   {
     title: "Orders",
-    icon: "image",
+    icon: "shopping-cart",
     href: "/admin/orders",
   },
 ];
