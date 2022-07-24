@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
 export default function Login() {
   let sectionStyle = {
     height: "100%",
@@ -217,21 +217,20 @@ export default function Login() {
                 </form>
               </div>
             </div>
-            <div className="flex flex-wrap mt-6">
-              <div className="w-1/2">
-                <Link href="/forget" className="text-white">
-                  <span className="text-white cursor-pointer">
-                    Forget password
-                  </span>
-                </Link>
-              </div>
-              <div className="w-1/2 text-right">
-                <Link href="/signup" className="text-white">
-                  <span className="text-white cursor-pointer">
-                    Create new account
-                  </span>
-                </Link>
-              </div>
+            <div className="flex justify-between flex-wrap mt-6">
+              <Link href="/forget" className="text-white">
+                <span className="text-white cursor-pointer">
+                  Forget password
+                </span>
+              </Link>
+              <Link href="/admin/login" className="text-white">
+                <span className="text-white cursor-pointer">Admin Login</span>
+              </Link>
+              <Link href="/signup" className="text-white">
+                <span className="text-white cursor-pointer">
+                  Create new account
+                </span>
+              </Link>
             </div>
           </div>
         </div>

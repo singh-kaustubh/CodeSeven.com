@@ -15,11 +15,6 @@ const Menuitems = [
     href: "/admin/viewProduct",
   },
   {
-    title: "Remove Product",
-    icon: "x-square",
-    href: "/admin/removeProduct",
-  },
-  {
     title: "Users",
     icon: "users",
     href: "/admin/users",

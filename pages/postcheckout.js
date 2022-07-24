@@ -13,6 +13,7 @@ export default function Postcheckout({ data }) {
   const dispatch = useDispatch();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
+  const [isAdmin, setIsAdmin] = useState(false);
   const fetchUser = async (token) => {
     const res = await fetch("http://localhost:3000/api/fetchUser", {
       method: "POST",
@@ -25,13 +26,32 @@ export default function Postcheckout({ data }) {
     setName(response.name);
     setEmail(response.email);
   };
+  const fetchAdminUser = async (token) => {
+    const res = await fetch("http://localhost:3000/api/admin/fetchAdminUser", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ token: token }),
+    });
+    const response = await res.json();
+    setName(response.name);
+    setEmail(response.email);
+    setIsAdmin(true);
+  };
   useEffect(() => {
     dispatch(actions.postcheckoutClearcart());
     const token =
       typeof window !== "undefined" && localStorage.getItem("auth-token")
         ? localStorage.getItem("auth-token")
         : "";
-    if (token.length) {
+    const adminToken =
+      typeof window !== "undefined" && localStorage.getItem("admin-token")
+        ? localStorage.getItem("admin-token")
+        : "";
+    if (adminToken.length) {
+      fetchAdminUser(adminToken);
+    } else if (token.length) {
       fetchUser(token);
     } else {
       router.push("/login");
@@ -200,7 +220,7 @@ export default function Postcheckout({ data }) {
           </div>
           <div className="bg-gray-50 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col ">
             <h3 className="text-xl font-semibold leading-5 text-gray-800">
-              Customer
+              {!isAdmin ? "Customer" : "Admin"}
             </h3>
             <div className="flex  flex-col md:flex-row xl:flex-col justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 xl:space-x-0 ">
               <div className="flex flex-col justify-start items-start flex-shrink-0">
@@ -271,7 +291,7 @@ export default function Postcheckout({ data }) {
                     </p>
                   </div>
                 </div>
-                <div className="flex w-full justify-center items-center md:justify-start md:items-start">
+                <div className="flex mt-1 w-full justify-center items-center md:justify-start md:items-start">
                   <button className="mt-6 md:mt-0 py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base leading-4 text-gray-800">
                     Edit Details
                   </button>

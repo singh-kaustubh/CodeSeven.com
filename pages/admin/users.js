@@ -4,8 +4,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../../src/theme/theme";
 import { Grid } from "@mui/material";
-import ProductPerfomance from "../../src/components/dashboard/ProductPerfomance";
-export default function Users() {
+import Users from "../../src/components/dashboard/Users";
+export default function User() {
   return (
     <ThemeProvider theme={theme}>
       <style jsx global>{`
@@ -17,10 +17,9 @@ export default function Users() {
       <FullLayout>
         <Grid container spacing={0}>
           <Grid item xs={12} lg={12}>
-            <ProductPerfomance />
+            <Users />
           </Grid>
         </Grid>
-        !
       </FullLayout>
     </ThemeProvider>
   );

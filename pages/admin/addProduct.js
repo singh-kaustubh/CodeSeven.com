@@ -32,41 +32,57 @@ export default function AddProducts() {
             <BaseCard title="Add a product">
               <Stack spacing={3}>
                 <TextField
-                  id="name-basic"
-                  label="Name"
+                  id="title"
+                  label="Title"
+                  type="text"
                   variant="outlined"
+                  autoComplete="off"
                   defaultValue=""
                 />
-                <TextField id="email-basic" label="Email" variant="outlined" />
                 <TextField
-                  id="pass-basic"
-                  label="Password"
-                  type="password"
+                  type="text"
+                  id="category"
+                  label="Category"
                   variant="outlined"
+                  autoComplete="off"
                 />
                 <TextField
-                  id="outlined-multiline-static"
-                  label="Text Area"
+                  id="price"
+                  label="Price"
+                  type="number"
+                  variant="outlined"
+                  autoComplete="off"
+                />
+                <TextField
+                  id="desc"
+                  label="Description"
                   multiline
                   rows={4}
-                  defaultValue="Default Value"
+                  autoComplete="off"
                 />
-                <TextField
-                  error
-                  id="er-basic"
-                  label="Error"
-                  defaultValue="ad1avi"
-                  variant="outlined"
-                />
+                <div className="flex space-x-2 justify-between">
+                  {" "}
+                  <TextField
+                    className="w-1/2"
+                    id="img_default"
+                    label="Default Image"
+                    variant="outlined"
+                  />{" "}
+                  <TextField
+                    className="w-1/2"
+                    id="availableQty"
+                    label="Total Available Quantity"
+                    variant="outlined"
+                  />
+                </div>
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Terms & Condition"
+                    control={<Checkbox />}
+                    label="Both Color and Size Variants"
                   />
                   <FormControlLabel
-                    disabled
                     control={<Checkbox />}
-                    label="Disabled"
+                    label="Only Size Variants"
                   />
                 </FormGroup>
                 <FormControl>
@@ -97,27 +113,9 @@ export default function AddProducts() {
                 </FormControl>
               </Stack>
               <br />
-              <Button variant="contained" mt={2}>
+              <Button variant="outlined" mt={2}>
                 Submit
               </Button>
-            </BaseCard>
-          </Grid>
-
-          <Grid item xs={12} lg={12}>
-            <BaseCard title="Form Design Type">
-              <Stack spacing={3} direction="row">
-                <TextField
-                  id="outlined-basic"
-                  label="Outlined"
-                  variant="outlined"
-                />
-                <TextField id="filled-basic" label="Filled" variant="filled" />
-                <TextField
-                  id="standard-basic"
-                  label="Standard"
-                  variant="standard"
-                />
-              </Stack>
             </BaseCard>
           </Grid>
         </Grid>
