@@ -3,9 +3,16 @@ import connectDb from "../../middlewear/mongoose";
 import PaytmChecksum from "paytmchecksum";
 import Order from "../../models/Order";
 import Product from "../../models/Product";
+import NextCors from "nextjs-cors";
 const handler = async (req, res) => {
   const MID = process.env.NEXT_PUBLIC_PAYTM_MID;
   const MKEY = process.env.PAYTM_MKEY;
+  await NextCors(req, res, {
+    // Options
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    origin: '*',
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  });
   if (req.method == `POST`) {
     const cart = req.body.items;
     let sumtotal = 0;

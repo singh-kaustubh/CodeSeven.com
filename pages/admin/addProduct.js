@@ -39,11 +39,22 @@ export default function AddProducts() {
   const handleChangeCategory = (e) => {
     setCategory(e.target.value);
   };
+  const [color, setColor] = useState({
+    "Color 1": {
+      "Size 1": "Size 1 Quantity",
+      "Size 2": "Size 2 Quantity",
+    },
+    Color: {
+      "Size 1": "Size 1 Quantity",
+      "Size 2": "Size 2 Quantity",
+    },
+  });
+  const [varImage, setVarImage] = useState({});
   const [sizeQty, setSizeQty] = useState([{ variant: "", qty: 0 }]);
-  const handleAdd = () => {
+  const handleAddSize = () => {
     setSizeQty([...sizeQty, { variant: "", qty: 0 }]);
   };
-  const handleRemove = (index) => {
+  const handleRemoveSize = (index) => {
     const list = [...sizeQty];
     list.splice(index, 1);
     setSizeQty(list);
@@ -162,20 +173,84 @@ export default function AddProducts() {
                         onChange={handleChangeVariants}
                       />
                       {colorShow && (
-                        <div className="flex space-x-2 justify-between">
-                          {" "}
-                          <TextField
-                            className="w-1/2"
-                            id="img_default"
-                            label="Default Image"
-                            variant="outlined"
-                          />{" "}
-                          <TextField
-                            className="w-1/2"
-                            id="availableQty"
-                            label="Total Available Quantity"
-                            variant="outlined"
-                          />
+                        <div
+                          className="py-24 bg-gray-200 h-full bg-opacity-70 transition duration-150 ease-in-out z-10 fixed top-0 right-0 bottom-0 left-0"
+                          id="modal"
+                        >
+                          <div
+                            role="alert"
+                            className="container mx-auto w-11/12 md:w-2/3 max-w-lg"
+                          >
+                            <div className="relative py-8 px-5 md:px-10 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
+                              <div className="w-full text-gray-600 mb-3"></div>
+                              <form>
+                                <h1 className="text-gray-800 dark:text-white text-center  font-lg font-bold tracking-normal leading-tight mb-4">
+                                  Enter the colors with their size in the
+                                  following faishon!
+                                </h1>
+                                <label
+                                  htmlFor="color"
+                                  className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                                >
+                                  Color Variants
+                                </label>
+                                <input
+                                  id="color"
+                                  name="color"
+                                  value={color}
+                                  className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                                />
+                                <label
+                                  htmlFor="varImages"
+                                  className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                                >
+                                  Variant Images
+                                </label>
+                                <input
+                                  id="varImage"
+                                  name="varImage"
+                                  value={JSON.stringify(varImage)}
+                                  className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                                />
+                                <div className="flex items-center space-x-1 justify-start w-full">
+                                  <button
+                                    type="submit"
+                                    className="bg-red-800 hover:scale-105 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                                  >
+                                    Submit
+                                  </button>
+                                  <button
+                                    className="bg-gray-100 hover:scale-105 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                                    onClick={() => setColorShow(false)}
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </form>
+                              <button
+                                className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
+                                aria-label="close modal"
+                                role="button"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="icon icon-tabler icon-tabler-x"
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="2.5"
+                                  stroke="currentColor"
+                                  fill="none"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path stroke="none" d="M0 0h24v24H0z" />
+                                  <line x1="18" y1="6" x2="6" y2="18" />
+                                  <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       )}
                       <FormControlLabel
@@ -194,7 +269,7 @@ export default function AddProducts() {
                             >
                               {index == sizeQty.length - 1 && (
                                 <Button
-                                  onClick={(e) => handleAdd(e, index)}
+                                  onClick={(e) => handleAddSize(e, index)}
                                   variant="outlined"
                                 >
                                   <span className="text-2xl">+</span>
@@ -229,7 +304,7 @@ export default function AddProducts() {
                               />
                               {sizeQty.length > 1 && (
                                 <Button
-                                  onClick={() => handleRemove(index)}
+                                  onClick={() => handleRemoveSize(index)}
                                   variant="outlined"
                                   color="error"
                                 >

@@ -160,16 +160,13 @@ export default function Checkout() {
           },
         },
       };
-      {
-        typeof window !== "undefined" &&
-          window.Paytm.CheckoutJS.init(config)
-            .then(function onSuccess() {
-              window.Paytm.CheckoutJS.invoke();
-            })
-            .catch(function onError(error) {
-              console.log("error => ", error);
-            });
-      }
+      window.Paytm.CheckoutJS.init(config)
+        .then(function onSuccess() {
+          window.Paytm.CheckoutJS.invoke();
+        })
+        .catch(function onError(error) {
+          console.log("error => ", error);
+        });
     } else if (!txnbody.success) {
       toast.warn(txnbody.error, {
         theme: "dark",
@@ -210,6 +207,7 @@ export default function Checkout() {
         id="payment"
         type="application/javascript"
         crossorigin="anonymous"
+        onLoad={() => initiatePayment()}
         src={`${PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${PAYTM_MID}.js`}
       >
         {" "}
