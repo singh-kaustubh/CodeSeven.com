@@ -65,23 +65,25 @@ export default function Post({ data }) {
   }, []);
   const checkAvailable = (color, size) => {
     if (color) {
-      Object.keys(item._color).forEach((val) => {
-        if (val == color) {
-          Object.keys(item._color[val]).forEach((obj) => {
-            if (obj == size) {
-              const qty = item._color[val][obj];
-              setAvail(qty ? true : false);
-            }
-          });
-        }
-      });
+      item._color &&
+        Object.keys(item._color).forEach((val) => {
+          if (val == color) {
+            Object.keys(item._color[val]).forEach((obj) => {
+              if (obj == size) {
+                const qty = item._color[val][obj];
+                setAvail(qty ? true : false);
+              }
+            });
+          }
+        });
     } else if (size) {
-      Object.keys(item._sizeQty).forEach((val) => {
-        if (val == size) {
-          const qty = item._sizeQty[val];
-          setAvail(qty ? true : false);
-        }
-      });
+      item._sizeQty &&
+        Object.keys(item._sizeQty).forEach((val) => {
+          if (val == size) {
+            const qty = item._sizeQty[val];
+            setAvail(qty ? true : false);
+          }
+        });
     } else {
       if (item.availableQty > 0) {
         setAvail(true);
