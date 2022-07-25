@@ -9,50 +9,55 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 import BaseCard from "../baseCard/BaseCard";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 export default function Orderadmin() {
-  const [users, setUsers] = useState([]);
-  const fetchUsers = async (temp) => {
-    const response = await fetch("http://localhost:3000/api/admin/getUsers", {
-      method: `POST`,
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ token: temp }),
-    });
+  const [products, setProducts] = useState([]);
+  const fetchProducts = async (temp) => {
+    const response = await fetch(
+      "http://localhost:3000/api/admin/getProducts",
+      {
+        method: `POST`,
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ token: temp }),
+      }
+    );
     const data = await response.json();
-    setUsers(data.users.reverse());
+    setProducts(data.products.reverse());
   };
   const router = useRouter();
   useEffect(() => {
     const temp =
       typeof window !== "undefined" && localStorage.getItem("admin-token");
     if (temp.length) {
-      fetchUsers(temp);
+      fetchProducts(temp);
     } else {
       router.push("/admin/login");
     }
   }, []);
-  const handleDelete = async (email) => {
+  const handleEdit = async (slug) => {};
+  const handleDelete = async (slug) => {
     const temp =
       typeof window !== "undefined" && localStorage.getItem("admin-token");
     if (confirm("Are you sure?")) {
       const response = await fetch(
-        "http://localhost:3000/api/admin/deleteUser",
+        "http://localhost:3000/api/admin/deleteProduct",
         {
           method: `DELETE`,
           headers: {
             "Content-type": "application/json",
           },
-          body: JSON.stringify({ token: temp, email: email }),
+          body: JSON.stringify({ token: temp, slug: slug }),
         }
       );
       const res = await response.json();
-      await fetchUsers(temp);
+      await fetchProducts(temp);
       if (res.success) {
         toast.success(res.message, {
           theme: "dark",
@@ -79,7 +84,7 @@ export default function Orderadmin() {
     }
   };
   return (
-    <BaseCard title="Registered Users">
+    <BaseCard title="Registered Products">
       <Table
         aria-label="simple table"
         sx={{
@@ -96,22 +101,27 @@ export default function Orderadmin() {
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                User ID
+                Product ID
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                User Details
+                Product Details
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Date of Joining
+                Date of Updation
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Email
+                Price
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="h6">
+                Variants
               </Typography>
             </TableCell>
             <TableCell>
@@ -122,8 +132,8 @@ export default function Orderadmin() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user, index) => (
-            <TableRow key={user._id}>
+          {products.map((product, index) => (
+            <TableRow key={product._id}>
               <TableCell>
                 <Typography
                   sx={{
@@ -134,15 +144,17 @@ export default function Orderadmin() {
                   {index + 1}
                 </Typography>
               </TableCell>
-              <Link href={`/postcheckout?orderId=${user.name}`}>
+              <Link href={`/product/${product.slug}`}>
                 <TableCell>
                   <Typography
                     sx={{
                       fontSize: "15px",
                       fontWeight: "500",
+                      color: "blue",
                     }}
+                    className="cursor-pointer"
                   >
-                    {user._id}
+                    {product.slug}
                   </Typography>
                 </TableCell>
               </Link>
@@ -160,7 +172,7 @@ export default function Orderadmin() {
                         fontWeight: "600",
                       }}
                     >
-                      {user.name}
+                      {product.title.slice(0, 20)}...
                     </Typography>
                     <Typography
                       color="textSecondary"
@@ -168,35 +180,73 @@ export default function Orderadmin() {
                         fontSize: "13px",
                       }}
                     >
-                      {user.phone}
+                      {product.category}
                     </Typography>
                   </Box>
                 </Box>
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="h6">
-                  {user.createdAt.slice(8, 10) +
+                  {product.updatedAt.slice(8, 10) +
                     `-` +
-                    user.createdAt.slice(5, 7) +
+                    product.updatedAt.slice(5, 7) +
                     `-` +
-                    user.createdAt.slice(0, 4) +
-                    `@` +
-                    user.createdAt.slice(11, 16)}
+                    product.updatedAt.slice(0, 4)}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6" color={"blue"} className="underline">
-                  {user.email}
-                </Typography>
+                <Typography variant="h6">${product.price}</Typography>
+              </TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <Typography variant="h6">
+                      {product.size.length ? (
+                        <span className="flex">
+                          Size:
+                          <AiOutlineCheckCircle className="text-xl mx-auto" />
+                        </span>
+                      ) : (
+                        " "
+                      )}
+                    </Typography>
+                    <Typography variant="h6">
+                      {product._color ? (
+                        <span className="flex">
+                          Color:
+                          <AiOutlineCheckCircle className="text-xl mx-auto" />
+                        </span>
+                      ) : (
+                        " "
+                      )}
+                    </Typography>
+                  </Box>
+                </Box>
               </TableCell>
               <TableCell>
                 <Typography variant="h6">
                   <button
                     type="button"
                     onClick={() => {
-                      handleDelete(user.email);
+                      handleEdit(product.slug);
                     }}
-                    className="flex text-lg px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
+                    className="flex text-lg justify-center my-1 w-full text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
+                  >
+                    Edit
+                  </button>
+                </Typography>
+                <Typography variant="h6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDelete(product.slug);
+                    }}
+                    className="flex text-lg justify-center my-1 w-full text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
                   >
                     Delete
                   </button>

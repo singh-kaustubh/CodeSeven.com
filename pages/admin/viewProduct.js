@@ -20,7 +20,6 @@ export default function View() {
             <Products />
           </Grid>
         </Grid>
-        !
       </FullLayout>
     </ThemeProvider>
   );

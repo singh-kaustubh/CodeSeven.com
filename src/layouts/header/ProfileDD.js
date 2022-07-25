@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import userimg from "../../../assets/images/users/user2.jpg";
+import { useEffect, useState } from "react";
 import {
   Box,
   Menu,
@@ -12,13 +13,31 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-const ProfileDD = () => {
-  const [anchorEl4, setAnchorEl4] = React.useState(null);
-
+export default function ProfileDD() {
+  const [anchorEl4, setAnchorEl4] = useState(null);
+  const [admin, setAdmin] = useState("");
+  const fetchAdmin = async (token) => {
+    const response = await fetch(
+      "http://localhost:3000/api/admin/fetchAdminUser",
+      {
+        method: `POST`,
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ token: token }),
+      }
+    );
+    const res = await response.json();
+    setAdmin(res.name);
+  };
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("admin-token");
+    fetchAdmin(token);
+  }, []);
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
   };
-
   const handleClose4 = () => {
     setAnchorEl4(null);
   };
@@ -63,13 +82,11 @@ const ProfileDD = () => {
                 ml: 1,
               }}
             >
-              Julia
+              {admin}
             </Typography>
           </Box>
         </Box>
       </Button>
     </>
   );
-};
-
-export default ProfileDD;
+}

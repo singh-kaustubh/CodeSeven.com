@@ -39,13 +39,38 @@ export default function AddProducts() {
                   autoComplete="off"
                   defaultValue=""
                 />
-                <TextField
-                  type="text"
-                  id="category"
-                  label="Category"
-                  variant="outlined"
-                  autoComplete="off"
-                />
+                <FormControl className="flex">
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Category
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="Color"
+                    className="flex"
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="men's clothing"
+                      control={<Radio />}
+                      label="Men's Clothing"
+                    />
+                    <FormControlLabel
+                      value="women's clothing"
+                      control={<Radio />}
+                      label="Women's Clothing"
+                    />
+                    <FormControlLabel
+                      value="electronics"
+                      control={<Radio />}
+                      label="Electronics"
+                    />
+                    <FormControlLabel
+                      value="jewelery"
+                      control={<Radio />}
+                      label="Jewellery"
+                    />
+                  </RadioGroup>
+                </FormControl>
                 <TextField
                   id="price"
                   label="Price"
@@ -71,43 +96,34 @@ export default function AddProducts() {
                   <TextField
                     className="w-1/2"
                     id="availableQty"
+                    aria-readonly="true"
                     label="Total Available Quantity"
                     variant="outlined"
                   />
                 </div>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Both Color and Size Variants"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Only Size Variants"
-                  />
-                </FormGroup>
                 <FormControl>
                   <FormLabel id="demo-radio-buttons-group-label">
-                    Gender
+                    Variants
                   </FormLabel>
                   <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="female"
+                    defaultValue="Color"
                     name="radio-buttons-group"
                   >
                     <FormControlLabel
-                      value="female"
+                      value="color"
                       control={<Radio />}
-                      label="Female"
+                      label="Color Variant (inclusive of sizes)"
                     />
                     <FormControlLabel
-                      value="male"
+                      value="size"
                       control={<Radio />}
-                      label="Male"
+                      label="Size variant"
                     />
                     <FormControlLabel
-                      value="other"
+                      value="none"
                       control={<Radio />}
-                      label="Other"
+                      label="None"
                     />
                   </RadioGroup>
                 </FormControl>
