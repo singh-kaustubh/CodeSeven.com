@@ -3,6 +3,10 @@ import FullLayout from "../../src/layouts/FullLayout";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../../src/theme/theme";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ColorVar from "../../Components/ColorVar.tsx";
+import VarImg from "../../Components/VarImg.tsx";
 import {
   Grid,
   Stack,
@@ -19,9 +23,29 @@ export default function AddProducts() {
   const [colorShow, setColorShow] = useState(false);
   const [sizeShow, setSizeShow] = useState(false);
   const [title, setTitle] = useState("");
+  const [price, setPrice] = useState();
+  const [availQty, setAvailQty] = useState();
+  const [desc, setDesc] = useState("");
+  const [defaultImg, setDefaultImg] = useState("");
   const handleTitlechange = (e) => {
     const { value } = e.target;
     setTitle(value);
+  };
+  const handlePricechange = (e) => {
+    const { value } = e.target;
+    setPrice(value);
+  };
+  const handleDescchange = (e) => {
+    const { value } = e.target;
+    setDesc(value);
+  };
+  const handleDefaultImgchange = (e) => {
+    const { value } = e.target;
+    setDefaultImg(value);
+  };
+  const handleAvailQtychange = (e) => {
+    const { value } = e.target;
+    setAvailQty(value);
   };
   const handleChangeVariants = (e) => {
     if (e.target.name == "color") {
@@ -49,7 +73,18 @@ export default function AddProducts() {
       "Size 2": "Size 2 Quantity",
     },
   });
-  const [varImage, setVarImage] = useState({});
+  const [varImage, setVarImage] = useState({
+    "Color 1": "Link to image 1",
+    "Color 2": "Link to image 2",
+  });
+  const handleColorChange = (e) => {
+    const { name, value } = e.target;
+    if (name == "color") {
+      setColor(value);
+    } else if (name == "varImage") {
+      setVarImage(value);
+    }
+  };
   const [sizeQty, setSizeQty] = useState([{ variant: "", qty: 0 }]);
   const handleAddSize = () => {
     setSizeQty([...sizeQty, { variant: "", qty: 0 }]);
@@ -64,6 +99,40 @@ export default function AddProducts() {
     const list = [...sizeQty];
     list[index][name] = value;
     setSizeQty(list);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await fetch("http://localhost:3000/api/admin/addProduct", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      // body: JSON.stringify(data),
+    });
+    const response = await res.json();
+    if (response.success) {
+      toast.success(response.message, {
+        theme: "dark",
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (!response.success) {
+      toast.error(response.error, {
+        theme: "dark",
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
   return (
     <ThemeProvider theme={theme}>
@@ -129,13 +198,23 @@ export default function AddProducts() {
                 <TextField
                   id="price"
                   label="Price"
+                  value={price}
+                  name="price"
+                  onChange={(e) => {
+                    handlePricechange(e);
+                  }}
                   type="number"
                   variant="outlined"
                   autoComplete="off"
                 />
                 <TextField
                   id="desc"
+                  value={desc}
                   label="Description"
+                  name="desc"
+                  onChange={(e) => {
+                    handleDescchange(e);
+                  }}
                   multiline
                   rows={4}
                   autoComplete="off"
@@ -145,12 +224,22 @@ export default function AddProducts() {
                   <TextField
                     className="w-1/2"
                     id="img_default"
+                    name="defaultImg"
+                    onChange={(e) => {
+                      handleDefaultImgchange(e);
+                    }}
+                    value={defaultImg}
                     label="Default Image"
                     variant="outlined"
                   />{" "}
                   <TextField
                     className="w-1/2"
                     id="availableQty"
+                    name="availQty"
+                    value={availQty}
+                    onChange={(e) => {
+                      handleAvailQtychange(e);
+                    }}
                     label="Total Available Quantity"
                     variant="outlined"
                   />
@@ -174,62 +263,52 @@ export default function AddProducts() {
                       />
                       {colorShow && (
                         <div
-                          className="py-24 bg-gray-200 h-full bg-opacity-70 transition duration-150 ease-in-out z-10 fixed top-0 right-0 bottom-0 left-0"
+                          className="py-20 bg-gray-200 h-full bg-opacity-70 transition duration-150 ease-in-out z-10 fixed top-0 right-0 bottom-0 left-0"
                           id="modal"
                         >
                           <div
                             role="alert"
-                            className="container mx-auto w-11/12 md:w-2/3 max-w-lg"
+                            className="container mx-auto w-11/12 md:w-2/3 max-w-xl"
                           >
-                            <div className="relative py-8 px-5 md:px-10 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
+                            <div className="relative py-8 px-5 md:px-10 text-lg bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
                               <div className="w-full text-gray-600 mb-3"></div>
-                              <form>
-                                <h1 className="text-gray-800 dark:text-white text-center  font-lg font-bold tracking-normal leading-tight mb-4">
-                                  Enter the colors with their size in the
-                                  following faishon!
-                                </h1>
-                                <label
-                                  htmlFor="color"
-                                  className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
-                                >
-                                  Color Variants
-                                </label>
-                                <input
-                                  id="color"
-                                  name="color"
-                                  value={color}
-                                  className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-                                />
-                                <label
-                                  htmlFor="varImages"
-                                  className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
-                                >
-                                  Variant Images
-                                </label>
-                                <input
-                                  id="varImage"
-                                  name="varImage"
-                                  value={JSON.stringify(varImage)}
-                                  className="mb-5 mt-2 text-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-200 dark:border-gray-700 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-                                />
-                                <div className="flex items-center space-x-1 justify-start w-full">
-                                  <button
+                              <h1 className="text-gray-800 dark:text-white text-center  font-lg font-bold tracking-normal leading-tight mb-4">
+                                Enter the colors with their size/quantity with
+                                thier images in the following faishon!
+                              </h1>
+                              <label
+                                htmlFor="color"
+                                className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                              >
+                                Color Variants
+                              </label>
+                              <ColorVar />
+                              <label
+                                htmlFor="varImages"
+                                className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
+                              >
+                                Variant Images
+                              </label>
+                              <VarImg />
+                              <div className="flex items-center space-x-1 justify-start w-full">
+                                {/* <button
                                     type="submit"
                                     className="bg-red-800 hover:scale-105 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
                                   >
                                     Submit
-                                  </button>
-                                  <button
+                                  </button> */}
+                                {/* <button
                                     className="bg-gray-100 hover:scale-105 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
                                     onClick={() => setColorShow(false)}
                                   >
                                     Cancel
-                                  </button>
-                                </div>
-                              </form>
+                                  </button> */}
+                              </div>
+
                               <button
                                 className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
                                 aria-label="close modal"
+                                onClick={() => setColorShow(false)}
                                 role="button"
                               >
                                 <svg
