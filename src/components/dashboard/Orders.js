@@ -13,7 +13,6 @@ import BaseCard from "../baseCard/BaseCard";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Index from "../../../pages/admin";
 export default function Orderadmin() {
   const [orders, setOrders] = useState([]);
   const fetchOrders = async () => {

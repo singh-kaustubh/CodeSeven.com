@@ -2,17 +2,10 @@ import React from "react";
 import Image from "next/image";
 import userimg from "../../../assets/images/users/user2.jpg";
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Menu,
-  Typography,
-  Link,
-  ListItemButton,
-  List,
-  ListItemText,
-  Button,
-  Divider,
-} from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ProfileDD() {
   const [anchorEl4, setAnchorEl4] = useState(null);
   const [admin, setAdmin] = useState("");
@@ -30,6 +23,23 @@ export default function ProfileDD() {
     const res = await response.json();
     setAdmin(res.name);
   };
+  const router = useRouter();
+  const handleLogout = () => {
+    localStorage.removeItem("admin-token");
+    toast.success(`Successfully logged out!`, {
+      theme: "dark",
+      position: "bottom-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setTimeout(() => {
+      router.push("/admin/login");
+    }, 1000);
+  };
   useEffect(() => {
     const token =
       typeof window !== "undefined" && localStorage.getItem("admin-token");
@@ -37,9 +47,6 @@ export default function ProfileDD() {
   }, []);
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
-  };
-  const handleClose4 = () => {
-    setAnchorEl4(null);
   };
   return (
     <>
@@ -50,7 +57,7 @@ export default function ProfileDD() {
         aria-haspopup="true"
         onClick={handleClick4}
       >
-        <Box display="flex" alignItems="center">
+        <Box className="space-x-2" display="flex" alignItems="center">
           <Image
             src={userimg}
             alt={userimg}
@@ -85,6 +92,15 @@ export default function ProfileDD() {
               {admin}
             </Typography>
           </Box>
+          <button
+            type="button"
+            onClick={() => {
+              handleLogout();
+            }}
+            className="flex text-base py-1 px-3 text-white bg-red-900 border-0 focus:outline-none hover:scale-105 rounded"
+          >
+            Log Out
+          </button>
         </Box>
       </Button>
     </>

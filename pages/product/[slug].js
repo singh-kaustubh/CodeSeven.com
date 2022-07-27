@@ -147,20 +147,22 @@ export default function Post({ data }) {
                 {item.title}
               </h1>
               <div className="flex mb-4">
-                <span className="flex items-center">
-                  <ReactStars
-                    {...{
-                      size: 25,
-                      activeColor: "#7f1d1d",
-                      isHalf: true,
-                      value: item.rating.rate,
-                      edit: false,
-                    }}
-                  />
-                  <span className="text-gray-600 ml-3">
-                    {item.rating.count}
+                {item.rating && (
+                  <span className="flex items-center">
+                    <ReactStars
+                      {...{
+                        size: 25,
+                        activeColor: "#7f1d1d",
+                        isHalf: true,
+                        value: item.rating.rate,
+                        edit: false,
+                      }}
+                    />
+                    <span className="text-gray-600 ml-3">
+                      {item.rating.count}
+                    </span>
                   </span>
-                </span>
+                )}
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                   <a className="text-gray-500">
                     <svg

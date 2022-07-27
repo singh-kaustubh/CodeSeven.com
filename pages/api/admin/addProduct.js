@@ -28,20 +28,18 @@ const handler = async (req, res) => {
           p._color = req.body._color;
           p.var_img = req.body.var_img;
         }
+        if (req.body.rating) {
+          p.rating = req.body.rating;
+        }
         const temp = await Product.findOneAndUpdate(
           { _id: p._id },
           { $set: p },
           { new: true }
         );
-        res
-          .status(200)
-          .json({
-            success: true,
-            message: `Successfully added the product ${temp.title.slice(
-              0,
-              20
-            )}`,
-          });
+        res.status(200).json({
+          success: true,
+          message: `Successfully added the product ${temp.title.slice(0, 20)}`,
+        });
         // size: { type: Array },
         //   _sizeQty: { type: Object },
         //   _color: { type: Object },

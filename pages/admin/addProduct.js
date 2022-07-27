@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import FullLayout from "../../src/layouts/FullLayout";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../../src/theme/theme";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ColorVar from "../../Components/ColorVar.tsx";
-import VarImg from "../../Components/VarImg.tsx";
 import {
   Grid,
   Stack,
@@ -20,6 +20,14 @@ import {
 } from "@mui/material";
 import BaseCard from "../../src/components/baseCard/BaseCard";
 export default function AddProducts() {
+  const router = useRouter();
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("admin-token");
+    if (!temp.length) {
+      router.push("/admin/login");
+    }
+  }, []);
   const [colorShow, setColorShow] = useState(false);
   const [sizeShow, setSizeShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -33,7 +41,7 @@ export default function AddProducts() {
   };
   const handlePricechange = (e) => {
     const { value } = e.target;
-    setPrice(value);
+    setPrice(parseInt(value));
   };
   const handleDescchange = (e) => {
     const { value } = e.target;
@@ -63,27 +71,28 @@ export default function AddProducts() {
   const handleChangeCategory = (e) => {
     setCategory(e.target.value);
   };
-  const [color, setColor] = useState({
-    "Color 1": {
-      "Size 1": "Size 1 Quantity",
-      "Size 2": "Size 2 Quantity",
-    },
-    Color: {
-      "Size 1": "Size 1 Quantity",
-      "Size 2": "Size 2 Quantity",
-    },
-  });
-  const [varImage, setVarImage] = useState({
-    "Color 1": "Link to image 1",
-    "Color 2": "Link to image 2",
-  });
-  const handleColorChange = (e) => {
+  const [colorQty, setColorQty] = useState([{ color: "", size: "", qty: 0 }]);
+  const handleAddColor = () => {
+    setColorQty([...colorQty, { color: "", size: "", qty: 0 }]);
+  };
+  const handleRemoveColor = (index) => {
+    const list = [...colorQty];
+    list.splice(index, 1);
+    setColorQty(list);
+  };
+  const handleColorVariant = (e, index) => {
     const { name, value } = e.target;
+    const list = [...colorQty];
+    let temp;
     if (name == "color") {
-      setColor(value);
-    } else if (name == "varImage") {
-      setVarImage(value);
+      temp = value.toLowerCase();
+    } else if (name == "size") {
+      temp = value.toUpperCase();
+    } else if (name == "qty") {
+      temp = parseInt(value);
     }
+    list[index][name] = temp;
+    setColorQty(list);
   };
   const [sizeQty, setSizeQty] = useState([{ variant: "", qty: 0 }]);
   const handleAddSize = () => {
@@ -97,17 +106,106 @@ export default function AddProducts() {
   const handleSizeVariant = (e, index) => {
     const { name, value } = e.target;
     const list = [...sizeQty];
-    list[index][name] = value;
+    let temp;
+    if (name == "variant") {
+      temp = value.toUpperCase();
+    } else if (name == "qty") {
+      temp = parseInt(value);
+    }
+    list[index][name] = temp;
     setSizeQty(list);
+  };
+  const [imgQty, setImgQty] = useState([{ color: "", url: "" }]);
+  const handleAddImg = () => {
+    setImgQty([...imgQty, { color: "", url: "" }]);
+  };
+  const handleRemoveImg = (index) => {
+    const list = [...imgQty];
+    list.splice(index, 1);
+    setImgQty(list);
+  };
+  const handleImgVariant = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...imgQty];
+    let temp;
+    if (name == "color") {
+      temp = value.toLowerCase();
+    } else if (name == "url") {
+      temp = value;
+    }
+    list[index][name] = temp;
+    setImgQty(list);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let data = {};
+    let size = [];
+    let avaqty = 0;
+    if (sizeShow) {
+      let _sizeQty = {};
+      sizeQty &&
+        sizeQty.map((item) => {
+          size.push(item.variant);
+          _sizeQty[item.variant] = parseInt(item.qty);
+          avaqty += parseInt(item.qty);
+        });
+      data.size = size;
+      data._sizeQty = _sizeQty;
+      setAvailQty(avaqty);
+    }
+    if (colorShow) {
+      let _color = {};
+      let var_img = {};
+      let avaqty = 0;
+      imgQty &&
+        imgQty.map((item) => {
+          var_img[item.color] = item.url;
+        });
+      colorQty &&
+        colorQty.map((item) => {
+          if (!_color[item.color]) {
+            _color[item.color] = {};
+            _color[item.color][item.size] = item.qty;
+            if (size.indexOf(item.size) === -1) {
+              size.push(item.size);
+            }
+            avaqty += parseInt(item.qty);
+          } else {
+            _color[item.color][item.size] = item.qty;
+            if (size.indexOf(item.size) === -1) {
+              size.push(item.size);
+            }
+            avaqty += parseInt(item.qty);
+          }
+        });
+      setAvailQty(avaqty);
+      data.size = size;
+      data._color = _color;
+      data.var_img = var_img;
+    }
+    data.title = title;
+    data.price = price;
+    data.slug = title;
+    data.category = category;
+    data.availableQty = availQty;
+    if (desc) {
+      data.desc = desc;
+    }
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("admin-token");
+    data.token = temp;
+    data.img = defaultImg;
+    data.rating = {
+      rate: Math.random() * 5,
+      count: Math.floor(Math.random() * 1000),
+    };
+    console.log(data);
     const res = await fetch("http://localhost:3000/api/admin/addProduct", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      // body: JSON.stringify(data),
+      body: JSON.stringify(data),
     });
     const response = await res.json();
     if (response.success) {
@@ -146,269 +244,396 @@ export default function AddProducts() {
         <Grid container spacing={0}>
           <Grid item xs={12} lg={12}>
             <BaseCard title="Add a product">
-              <Stack spacing={3}>
-                <TextField
-                  id="title"
-                  value={title}
-                  onChange={(e) => {
-                    handleTitlechange(e);
-                  }}
-                  label="Title"
-                  type="text"
-                  variant="outlined"
-                  autoComplete="off"
-                  defaultValue=""
-                />
-                <FormControl className="flex">
-                  <FormLabel id="demo-radio-buttons-group-label">
-                    Category
-                  </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="Color"
-                    className="flex"
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      value="men's clothing"
-                      onChange={handleChangeCategory}
-                      control={<Radio />}
-                      label="Men's Clothing"
-                    />
-                    <FormControlLabel
-                      value="women's clothing"
-                      onChange={handleChangeCategory}
-                      control={<Radio />}
-                      label="Women's Clothing"
-                    />
-                    <FormControlLabel
-                      value="electronics"
-                      onChange={handleChangeCategory}
-                      control={<Radio />}
-                      label="Electronics"
-                    />
-                    <FormControlLabel
-                      value="jewelery"
-                      onChange={handleChangeCategory}
-                      control={<Radio />}
-                      label="Jewellery"
-                    />
-                  </RadioGroup>
-                </FormControl>
-                <TextField
-                  id="price"
-                  label="Price"
-                  value={price}
-                  name="price"
-                  onChange={(e) => {
-                    handlePricechange(e);
-                  }}
-                  type="number"
-                  variant="outlined"
-                  autoComplete="off"
-                />
-                <TextField
-                  id="desc"
-                  value={desc}
-                  label="Description"
-                  name="desc"
-                  onChange={(e) => {
-                    handleDescchange(e);
-                  }}
-                  multiline
-                  rows={4}
-                  autoComplete="off"
-                />
-                <div className="flex space-x-2 justify-between">
-                  {" "}
+              <form onSubmit={handleSubmit}>
+                <Stack spacing={3}>
                   <TextField
-                    className="w-1/2"
-                    id="img_default"
-                    name="defaultImg"
+                    id="title"
+                    value={title}
                     onChange={(e) => {
-                      handleDefaultImgchange(e);
+                      handleTitlechange(e);
                     }}
-                    value={defaultImg}
-                    label="Default Image"
+                    label="Title"
+                    type="text"
                     variant="outlined"
-                  />{" "}
-                  <TextField
-                    className="w-1/2"
-                    id="availableQty"
-                    name="availQty"
-                    value={availQty}
-                    onChange={(e) => {
-                      handleAvailQtychange(e);
-                    }}
-                    label="Total Available Quantity"
-                    variant="outlined"
+                    autoComplete="off"
+                    defaultValue=""
                   />
-                </div>
-                {category !== "electronics" && (
-                  <FormControl>
+                  <FormControl className="flex">
                     <FormLabel id="demo-radio-buttons-group-label">
-                      Variants
+                      Category
                     </FormLabel>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
                       defaultValue="Color"
+                      className="flex"
                       name="radio-buttons-group"
                     >
                       <FormControlLabel
-                        value="color"
-                        name="color"
+                        value="men's clothing"
+                        onChange={handleChangeCategory}
                         control={<Radio />}
-                        label="Color Variants (inclusive of sizes)"
-                        onChange={handleChangeVariants}
+                        label="Men's Clothing"
                       />
-                      {colorShow && (
-                        <div
-                          className="py-20 bg-gray-200 h-full bg-opacity-70 transition duration-150 ease-in-out z-10 fixed top-0 right-0 bottom-0 left-0"
-                          id="modal"
-                        >
-                          <div
-                            role="alert"
-                            className="container mx-auto w-11/12 md:w-2/3 max-w-xl"
-                          >
-                            <div className="relative py-8 px-5 md:px-10 text-lg bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
-                              <div className="w-full text-gray-600 mb-3"></div>
-                              <h1 className="text-gray-800 dark:text-white text-center  font-lg font-bold tracking-normal leading-tight mb-4">
-                                Enter the colors with their size/quantity with
-                                thier images in the following faishon!
-                              </h1>
-                              <label
-                                htmlFor="color"
-                                className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
-                              >
-                                Color Variants
-                              </label>
-                              <ColorVar />
-                              <label
-                                htmlFor="varImages"
-                                className="text-gray-800 dark:text-white  text-sm font-bold leading-tight tracking-normal"
-                              >
-                                Variant Images
-                              </label>
-                              <VarImg />
-                              <div className="flex items-center space-x-1 justify-start w-full">
-                                {/* <button
-                                    type="submit"
-                                    className="bg-red-800 hover:scale-105 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
-                                  >
-                                    Submit
-                                  </button> */}
-                                {/* <button
-                                    className="bg-gray-100 hover:scale-105 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
-                                    onClick={() => setColorShow(false)}
-                                  >
-                                    Cancel
-                                  </button> */}
-                              </div>
-
-                              <button
-                                className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
-                                aria-label="close modal"
-                                onClick={() => setColorShow(false)}
-                                role="button"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="icon icon-tabler icon-tabler-x"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="2.5"
-                                  stroke="currentColor"
-                                  fill="none"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <path stroke="none" d="M0 0h24v24H0z" />
-                                  <line x1="18" y1="6" x2="6" y2="18" />
-                                  <line x1="6" y1="6" x2="18" y2="18" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
                       <FormControlLabel
-                        value="size"
-                        name="size"
+                        value="women's clothing"
+                        onChange={handleChangeCategory}
                         control={<Radio />}
-                        label="Size Variants"
-                        onChange={handleChangeVariants}
+                        label="Women's Clothing"
                       />
-                      {sizeShow && (
-                        <div className="block">
-                          {sizeQty.map((item, index) => (
-                            <div
-                              className="flex my-2 justify-between space-x-2"
-                              key={index}
-                            >
-                              {index == sizeQty.length - 1 && (
-                                <Button
-                                  onClick={(e) => handleAddSize(e, index)}
-                                  variant="outlined"
-                                >
-                                  <span className="text-2xl">+</span>
-                                </Button>
-                              )}
-                              <TextField
-                                name="variant"
-                                type={"text"}
-                                id="variant"
-                                onChange={(e) => {
-                                  handleSizeVariant(e, index);
-                                }}
-                                value={item.variant}
-                                className="w-full"
-                                label="Size Variant"
-                                variant="outlined"
-                                required
-                                placeholder="Enter the size variant (M/L/XL....)"
-                              />
-                              <TextField
-                                type={"number"}
-                                className="w-full"
-                                value={item.qty}
-                                name="qty"
-                                required
-                                onChange={(e) => {
-                                  handleSizeVariant(e, index);
-                                }}
-                                label="Variant available quantity"
-                                variant="outlined"
-                                placeholder="Enter variant's available units"
-                              />
-                              {sizeQty.length > 1 && (
-                                <Button
-                                  onClick={() => handleRemoveSize(index)}
-                                  variant="outlined"
-                                  color="error"
-                                >
-                                  <span className="text-2xl">-</span>
-                                </Button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
                       <FormControlLabel
-                        value="none"
-                        name="none"
+                        value="electronics"
+                        onChange={handleChangeCategory}
                         control={<Radio />}
-                        label="None"
-                        onChange={handleChangeVariants}
+                        label="Electronics"
+                      />
+                      <FormControlLabel
+                        value="jewelery"
+                        onChange={handleChangeCategory}
+                        control={<Radio />}
+                        label="Jewellery"
                       />
                     </RadioGroup>
                   </FormControl>
-                )}
-              </Stack>
-              <br />
-              <Button variant="outlined" mt={2}>
-                Submit
-              </Button>
+                  <TextField
+                    id="price"
+                    label="Price"
+                    value={price}
+                    name="price"
+                    onChange={(e) => {
+                      handlePricechange(e);
+                    }}
+                    type="number"
+                    variant="outlined"
+                    autoComplete="off"
+                  />
+                  <TextField
+                    id="desc"
+                    value={desc}
+                    label="Description"
+                    name="desc"
+                    onChange={(e) => {
+                      handleDescchange(e);
+                    }}
+                    multiline
+                    rows={4}
+                    autoComplete="off"
+                  />
+                  <div className="flex space-x-2 justify-between">
+                    {" "}
+                    <TextField
+                      className="w-1/2"
+                      id="img_default"
+                      name="defaultImg"
+                      onChange={(e) => {
+                        handleDefaultImgchange(e);
+                      }}
+                      value={defaultImg}
+                      label="Default Image"
+                      variant="outlined"
+                    />{" "}
+                    <TextField
+                      className="w-1/2"
+                      id="availableQty"
+                      name="availQty"
+                      value={availQty}
+                      onChange={(e) => {
+                        handleAvailQtychange(e);
+                      }}
+                      label="Total Available Quantity"
+                      variant="outlined"
+                    />
+                  </div>
+                  {category !== "electronics" && (
+                    <FormControl>
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        Variants
+                      </FormLabel>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue="Color"
+                        name="radio-buttons-group"
+                      >
+                        <FormControlLabel
+                          value="color"
+                          name="color"
+                          control={<Radio />}
+                          label="Color Variants (inclusive of sizes)"
+                          onChange={handleChangeVariants}
+                        />
+                        {colorShow && (
+                          <div>
+                            <label
+                              htmlFor="varImages"
+                              className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
+                            >
+                              Variant Colors
+                            </label>
+                            <div className="block">
+                              {colorQty.map((item, index) => (
+                                <div
+                                  className="flex my-2 justify-between space-x-2"
+                                  key={index}
+                                >
+                                  {index < colorQty.length - 1 ? (
+                                    <Button
+                                      onClick={(e) => handleAddColor(e, index)}
+                                      variant="outlined"
+                                      className="invisible"
+                                    >
+                                      <span className="text-2xl">+</span>
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      onClick={(e) => handleAddColor(e, index)}
+                                      variant="outlined"
+                                      className="visible"
+                                    >
+                                      <span className="text-2xl">+</span>
+                                    </Button>
+                                  )}
+                                  <TextField
+                                    name="color"
+                                    type={"text"}
+                                    id="color"
+                                    onChange={(e) => {
+                                      handleColorVariant(e, index);
+                                    }}
+                                    value={item.color}
+                                    className="w-full"
+                                    label="Color"
+                                    variant="outlined"
+                                    required
+                                    placeholder="Enter the Color"
+                                  />
+                                  <TextField
+                                    name="size"
+                                    type={"text"}
+                                    id="size"
+                                    onChange={(e) => {
+                                      handleColorVariant(e, index);
+                                    }}
+                                    value={item.size}
+                                    className="w-full"
+                                    label="Size"
+                                    variant="outlined"
+                                    required
+                                    autoCapitalize="characters"
+                                    placeholder="Enter the size variant (M/L/XL....)"
+                                  />
+                                  <TextField
+                                    type={"number"}
+                                    className="w-full"
+                                    value={item.qty || 0}
+                                    name="qty"
+                                    required
+                                    onChange={(e) => {
+                                      handleColorVariant(e, index);
+                                    }}
+                                    label="Quantity"
+                                    variant="outlined"
+                                    placeholder="Enter variant's available units"
+                                  />
+                                  {colorQty.length > 1 ? (
+                                    <Button
+                                      onClick={() => handleRemoveColor(index)}
+                                      variant="outlined"
+                                      color="error"
+                                    >
+                                      <span className="text-2xl">-</span>
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      onClick={() => handleRemoveColor(index)}
+                                      variant="outlined"
+                                      color="error"
+                                      className="invisible"
+                                    >
+                                      <span className="text-2xl">-</span>
+                                    </Button>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                            <label
+                              htmlFor="varImages"
+                              className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
+                            >
+                              Variant Images
+                            </label>
+                            <div className="block">
+                              {imgQty.map((item, index) => (
+                                <div
+                                  className="flex my-2 justify-between space-x-2"
+                                  key={index}
+                                >
+                                  {index < imgQty.length - 1 ? (
+                                    <Button
+                                      onClick={(e) => handleAddImg(e, index)}
+                                      variant="outlined"
+                                      className="invisible"
+                                    >
+                                      <span className="text-2xl">+</span>
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      onClick={(e) => handleAddImg(e, index)}
+                                      variant="outlined"
+                                      className="visible"
+                                    >
+                                      <span className="text-2xl">+</span>
+                                    </Button>
+                                  )}
+                                  <TextField
+                                    name="color"
+                                    type={"text"}
+                                    id="color"
+                                    onChange={(e) => {
+                                      handleImgVariant(e, index);
+                                    }}
+                                    value={item.color}
+                                    className="w-full"
+                                    label="Color"
+                                    variant="outlined"
+                                    required
+                                    placeholder="Enter the color"
+                                  />
+                                  <TextField
+                                    type={"text"}
+                                    className="w-full"
+                                    value={item.url}
+                                    name="url"
+                                    required
+                                    onChange={(e) => {
+                                      handleImgVariant(e, index);
+                                    }}
+                                    label="Link to Image"
+                                    variant="outlined"
+                                    placeholder="Enter the link"
+                                  />
+                                  {imgQty.length > 1 ? (
+                                    <Button
+                                      onClick={() => handleRemoveImg(index)}
+                                      variant="outlined"
+                                      color="error"
+                                    >
+                                      <span className="text-2xl">-</span>
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      onClick={() => handleRemoveImg(index)}
+                                      variant="outlined"
+                                      color="error"
+                                      className="invisible"
+                                    >
+                                      <span className="text-2xl">-</span>
+                                    </Button>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        <FormControlLabel
+                          value="size"
+                          name="size"
+                          control={<Radio />}
+                          label="Size Variants"
+                          onChange={handleChangeVariants}
+                        />
+                        {sizeShow && (
+                          <div className="block">
+                            {sizeQty.map((item, index) => (
+                              <div
+                                className="flex my-2 justify-between space-x-2"
+                                key={index}
+                              >
+                                {index < sizeQty.length - 1 ? (
+                                  <Button
+                                    onClick={(e) => handleAddSize(e, index)}
+                                    variant="outlined"
+                                    className="invisible"
+                                  >
+                                    <span className="text-2xl">+</span>
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    onClick={(e) => handleAddSize(e, index)}
+                                    variant="outlined"
+                                    className="visible"
+                                  >
+                                    <span className="text-2xl">+</span>
+                                  </Button>
+                                )}
+                                <TextField
+                                  name="variant"
+                                  type={"text"}
+                                  id="variant"
+                                  onChange={(e) => {
+                                    handleSizeVariant(e, index);
+                                  }}
+                                  value={item.variant}
+                                  className="w-full"
+                                  label="Size Variant"
+                                  variant="outlined"
+                                  required
+                                  placeholder="Enter the size variant (M/L/XL....)"
+                                />
+                                <TextField
+                                  type={"number"}
+                                  className="w-full"
+                                  value={item.qty || 0}
+                                  name="qty"
+                                  required
+                                  onChange={(e) => {
+                                    handleSizeVariant(e, index);
+                                  }}
+                                  label="Variant available quantity"
+                                  variant="outlined"
+                                  placeholder="Enter variant's available units"
+                                />
+                                {sizeQty.length > 1 ? (
+                                  <Button
+                                    onClick={() => handleRemoveSize(index)}
+                                    variant="outlined"
+                                    color="error"
+                                  >
+                                    <span className="text-2xl">-</span>
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    onClick={() => handleRemoveSize(index)}
+                                    variant="outlined"
+                                    color="error"
+                                    className="invisible"
+                                  >
+                                    <span className="text-2xl">-</span>
+                                  </Button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <FormControlLabel
+                          value="none"
+                          name="none"
+                          control={<Radio />}
+                          label="None"
+                          onChange={handleChangeVariants}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  )}
+                </Stack>
+                <br />
+                <Button
+                  onClick={handleSubmit}
+                  type="submit"
+                  variant="outlined"
+                  mt={2}
+                >
+                  Submit
+                </Button>
+              </form>
             </BaseCard>
           </Grid>
         </Grid>

@@ -41,7 +41,9 @@ export default function Orderadmin() {
       router.push("/admin/login");
     }
   }, []);
-  const handleEdit = async (slug) => {};
+  const handleEdit = async (slug) => {
+    
+  };
   const handleDelete = async (slug) => {
     const temp =
       typeof window !== "undefined" && localStorage.getItem("admin-token");
