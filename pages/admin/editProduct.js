@@ -19,7 +19,7 @@ import {
   Button,
 } from "@mui/material";
 import BaseCard from "../../src/components/baseCard/BaseCard";
-export default function AddProducts() {
+export default function AddProducts({ product }) {
   const router = useRouter();
   useEffect(() => {
     const temp =
@@ -27,14 +27,24 @@ export default function AddProducts() {
     if (!temp.length) {
       router.push("/admin/login");
     }
+    let obj = [];
+    product._sizeQty &&
+      Object.keys(product._sizeQty).forEach((key) => {
+        obj.push({ variant: key, qty: product._sizeQty[key] });
+      });
+    product._sizeQty && setSizeQty(obj);
+    product._color &&
+      Object.keys(product._color).forEach((key) => {
+        console.log(key, product._color[key]);
+      });
   }, []);
-  const [colorShow, setColorShow] = useState(false);
-  const [sizeShow, setSizeShow] = useState(false);
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState();
-  const [availQty, setAvailQty] = useState();
-  const [desc, setDesc] = useState("");
-  const [defaultImg, setDefaultImg] = useState("");
+  const [colorShow, setColorShow] = useState(product._color ? true : false);
+  const [sizeShow, setSizeShow] = useState(product._sizeQty ? true : false);
+  const [title, setTitle] = useState(product.title);
+  const [price, setPrice] = useState(product.price);
+  const [availQty, setAvailQty] = useState(product.availableQty);
+  const [desc, setDesc] = useState(product.desc);
+  const [defaultImg, setDefaultImg] = useState(product.img);
   const handleTitlechange = (e) => {
     const { value } = e.target;
     setTitle(value);
@@ -243,7 +253,7 @@ export default function AddProducts() {
       <FullLayout>
         <Grid container spacing={0}>
           <Grid item xs={12} lg={12}>
-            <BaseCard title="Add a product">
+            <BaseCard title="Edit product">
               <form onSubmit={handleSubmit}>
                 <Stack spacing={3}>
                   <TextField
@@ -264,7 +274,7 @@ export default function AddProducts() {
                     </FormLabel>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="Color"
+                      defaultValue={product.category}
                       className="flex"
                       name="radio-buttons-group"
                     >
@@ -350,7 +360,13 @@ export default function AddProducts() {
                       </FormLabel>
                       <RadioGroup
                         aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue="none"
+                        defaultValue={
+                          product._sizeQty
+                            ? "size"
+                            : product._color
+                            ? "color"
+                            : "none"
+                        }
                         name="radio-buttons-group"
                       >
                         <FormControlLabel
@@ -640,4 +656,19 @@ export default function AddProducts() {
       </FullLayout>
     </ThemeProvider>
   );
+}
+export async function getServerSideProps(context) {
+  const response = await fetch("http://localhost:3000/api/getProduct", {
+    method: `GET`,
+  });
+  const data = await response.json();
+  const slug = context.query.slug;
+  for (let item of data) {
+    if (item.slug === slug) {
+      let product = item;
+      return {
+        props: { product },
+      };
+    }
+  }
 }

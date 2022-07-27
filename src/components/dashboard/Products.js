@@ -42,7 +42,7 @@ export default function Orderadmin() {
     }
   }, []);
   const handleEdit = async (slug) => {
-    
+    router.push(`/admin/editProduct?slug=${slug}`);
   };
   const handleDelete = async (slug) => {
     const temp =
@@ -261,3 +261,4 @@ export default function Orderadmin() {
     </BaseCard>
   );
 }
+
