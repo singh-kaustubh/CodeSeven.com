@@ -219,6 +219,9 @@ export default function AddProducts() {
         draggable: true,
         progress: undefined,
       });
+      setTimeout(() => {
+        router.push("/admin/viewProduct");
+      }, 2000);
     } else if (!response.success) {
       toast.error(response.error, {
         theme: "dark",

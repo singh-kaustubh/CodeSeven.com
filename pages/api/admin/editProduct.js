@@ -3,42 +3,41 @@ import Admin from "../../../models/admin/Admin";
 import jwt from "jsonwebtoken";
 import connectDb from "../../../middlewear/mongoose";
 const handler = async (req, res) => {
-  if (req.method == `POST`) {
+  if (req.method == `PUT`) {
     try {
       const seckey = process.env.ADMIN_JWT_KEY;
       const response = jwt.verify(req.body.token, seckey);
       const temp = await Admin.findOne({ email: response.email });
       if (temp) {
-        const p = new Product({
-          title: req.body.title,
-          price: req.body.price,
-          availableQty: req.body.availableQty,
-          slug: req.body.slug,
-          desc: req.body.desc,
-          category: req.body.category,
-          img: req.body.img,
-        });
-        await p.save();
-        p.slug = p._id;
+        const product = await Product.findOne({ slug: req.body.slug });
+        product.title = req.body.title;
+        product.price = req.body.price;
+        product.availableQty = req.body.availableQty;
+        product.desc = req.body.desc;
+        product.category = req.body.category;
+        product.img = req.body.img;
         if (req.body._sizeQty) {
-          p.size = req.body.size;
-          p._sizeQty = req.body._sizeQty;
+          product.size = req.body.size;
+          product._sizeQty = req.body._sizeQty;
         } else if (req.body._color) {
-          p.size = req.body.size;
-          p._color = req.body._color;
-          p.var_img = req.body.var_img;
+          product.size = req.body.size;
+          product._color = req.body._color;
+          product.var_img = req.body.var_img;
         }
         if (req.body.rating) {
-          p.rating = req.body.rating;
+          product.rating = req.body.rating;
         }
         const temp = await Product.findOneAndUpdate(
-          { _id: p._id },
-          { $set: p },
+          { _id: product._id },
+          { $set: product },
           { new: true }
         );
         res.status(200).json({
           success: true,
-          message: `Successfully added the product ${temp.title.slice(0, 20)}`,
+          message: `Successfully updated the product ${temp.title.slice(
+            0,
+            20
+          )}`,
         });
       } else if (!temp) {
         return res

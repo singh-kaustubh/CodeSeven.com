@@ -7,45 +7,36 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import BaseCard from "../baseCard/BaseCard";
-
-const activities = [
-  {
-    time: "09.50",
-    color: "success.main",
-    text: "Meeting with John",
-  },
-  {
-    time: "09.46",
-    color: "secondary.main",
-    text: "Payment received from John Doe of $385.90",
-  },
-  {
-    time: "09.47",
-    color: "primary.main",
-    text: "Project Meeting",
-  },
-  {
-    time: "09.48",
-    color: "warning.main",
-    text: "New Sale recorded #ML-3467",
-  },
-  {
-    time: "09.49",
-    color: "error.main",
-    text: "Payment was made of $64.95 to Michael Anderson",
-  },
-];
-
+import Link from "next/link";
+import { useEffect, useState } from "react";
 const DailyActivity = () => {
+  const [orders, setOrders] = useState([]);
+  const fetchOrders = async () => {
+    const response = await fetch("http://localhost:3000/api/getOrders", {
+      method: `GET`,
+    });
+    const data = await response.json();
+    setOrders(data.reverse());
+  };
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+  const getColor = (od) => {
+    return od.status === "Paid"
+      ? "success.main"
+      : od.status === "Failed"
+      ? "error.main"
+      : "warning.main";
+  };
   return (
-    <BaseCard title="Daily Activity">
+    <BaseCard title="Recent Orders">
       <Timeline
         sx={{
           p: 0,
         }}
       >
-        {activities.map((activity) => (
-          <TimelineItem key={activity.time}>
+        {orders.map((od) => (
+          <TimelineItem key={od.orderId}>
             <TimelineOppositeContent
               sx={{
                 fontSize: "12px",
@@ -53,15 +44,24 @@ const DailyActivity = () => {
                 flex: "0",
               }}
             >
-              {activity.time}
+              {od.createdAt.slice(8, 10) +
+                `-` +
+                od.createdAt.slice(5, 7) +
+                `-` +
+                od.createdAt.slice(0, 4) +
+                `@` +
+                od.createdAt.slice(11, 16)}
             </TimelineOppositeContent>
             <TimelineSeparator>
-              <TimelineDot
-                variant="outlined"
-                sx={{
-                  borderColor: activity.color,
-                }}
-              />
+              <Link href={`/postcheckout?orderId=${od.orderId}`}>
+                <TimelineDot
+                  className="cursor-pointer"
+                  variant="outlined"
+                  sx={{
+                    borderColor: getColor(od),
+                  }}
+                />
+              </Link>
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent
@@ -70,7 +70,7 @@ const DailyActivity = () => {
                 fontSize: "14px",
               }}
             >
-              {activity.text}
+              {od.address.name}
             </TimelineContent>
           </TimelineItem>
         ))}

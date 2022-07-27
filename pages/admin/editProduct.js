@@ -27,16 +27,30 @@ export default function AddProducts({ product }) {
     if (!temp.length) {
       router.push("/admin/login");
     }
-    let obj = [];
-    product._sizeQty &&
+
+    if (product._sizeQty) {
+      let sz = [];
       Object.keys(product._sizeQty).forEach((key) => {
-        obj.push({ variant: key, qty: product._sizeQty[key] });
+        sz.push({ variant: key, qty: product._sizeQty[key] });
       });
-    product._sizeQty && setSizeQty(obj);
-    product._color &&
+      setSizeQty(sz);
+    }
+    if (product._color) {
+      let clr = [];
       Object.keys(product._color).forEach((key) => {
-        console.log(key, product._color[key]);
+        Object.keys(product._color[key]).forEach((item) => {
+          clr.push({ color: key, size: item, qty: product._color[key][item] });
+        });
       });
+      setColorQty(clr);
+    }
+    if (product.var_img) {
+      let img = [];
+      Object.keys(product.var_img).forEach((key) => {
+        img.push({ color: key, url: product.var_img[key] });
+      });
+      setImgQty(img);
+    }
   }, []);
   const [colorShow, setColorShow] = useState(product._color ? true : false);
   const [sizeShow, setSizeShow] = useState(product._sizeQty ? true : false);
@@ -195,7 +209,7 @@ export default function AddProducts({ product }) {
     }
     data.title = title;
     data.price = price;
-    data.slug = title;
+    data.slug = product.slug;
     data.category = category;
     data.availableQty = availQty;
     if (desc) {
@@ -205,13 +219,9 @@ export default function AddProducts({ product }) {
       typeof window !== "undefined" && localStorage.getItem("admin-token");
     data.token = temp;
     data.img = defaultImg;
-    data.rating = {
-      rate: Math.random() * 5,
-      count: Math.floor(Math.random() * 1000),
-    };
-    console.log(data);
-    const res = await fetch("http://localhost:3000/api/admin/addProduct", {
-      method: "POST",
+    data.rating = product.rating;
+    const res = await fetch("http://localhost:3000/api/admin/editProduct", {
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
       },
@@ -229,6 +239,9 @@ export default function AddProducts({ product }) {
         draggable: true,
         progress: undefined,
       });
+      setTimeout(() => {
+        router.push("/admin/viewProduct");
+      }, 2000);
     } else if (!response.success) {
       toast.error(response.error, {
         theme: "dark",
@@ -253,7 +266,7 @@ export default function AddProducts({ product }) {
       <FullLayout>
         <Grid container spacing={0}>
           <Grid item xs={12} lg={12}>
-            <BaseCard title="Edit product">
+            <BaseCard title="Edit product (edit the details)">
               <form onSubmit={handleSubmit}>
                 <Stack spacing={3}>
                   <TextField
