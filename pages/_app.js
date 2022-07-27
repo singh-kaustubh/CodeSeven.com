@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProgressBar from "react-progressbar-on-scroll";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 function MyApp({ Component, pageProps }) {
   const [progress, setProgress] = useState(0);
   const router = useRouter();
@@ -22,8 +23,24 @@ function MyApp({ Component, pageProps }) {
       setProgress(100);
     });
   });
+  const noOverlayWorkaroundScript = `
+  window.addEventListener('error', event => {
+    event.stopImmediatePropagation()
+  })
+
+  window.addEventListener('unhandledrejection', event => {
+    event.stopImmediatePropagation()
+  })
+`;
   return (
     <>
+      <Head>
+        {process.env.NODE_ENV !== "production" && (
+          <script
+            dangerouslySetInnerHTML={{ __html: noOverlayWorkaroundScript }}
+          />
+        )}
+      </Head>
       <ItemProvider>
         <Provider store={store}>
           <ToastContainer
