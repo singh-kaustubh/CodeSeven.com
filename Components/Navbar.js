@@ -282,7 +282,7 @@ export default function Navbar() {
                               </li>
                             </ul>
                           </div>
-                          <div className="flex items-center justify-between pt-5 pr-6">
+                          <div className="flex items-center space-x-2 justify-between pt-5 pr-6">
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => handleWishlist(item)}
@@ -294,7 +294,7 @@ export default function Navbar() {
                                 onClick={() => handleRemove(item)}
                                 className="flex text-sm text-white bg-red-900 border-0 px-1 focus:outline-none hover:scale-105 rounded"
                               >
-                                Remove
+                                Remove from cart
                               </button>
                             </div>
                             <p className="text-base font-black leading-none text-gray-800">
