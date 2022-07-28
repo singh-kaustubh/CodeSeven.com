@@ -102,16 +102,24 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href={"/return"}
+                    href={
+                      "https://www.termsfeed.com/public/uploads/2019/04/return-refund-policy-template.pdf"
+                    }
                     className="text-gray-50 hover:text-gray-800"
+                    target={"_blank"}
+                    rel="noreferrer"
                   >
                     Return Policy
                   </a>
                 </li>
                 <li>
                   <a
-                    href={"/contact"}
+                    href={
+                      "https://www.linkedin.com/in/kaustubh-singh-19573a1a6/"
+                    }
                     className="text-gray-50 hover:text-gray-800"
+                    target={"_blank"}
+                    rel="noreferrer"
                   >
                     Contact Details
                   </a>
